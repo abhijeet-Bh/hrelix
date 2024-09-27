@@ -2,11 +2,14 @@ package com.hrelix.app.models;
 
 import com.hrelix.app.models.utils.Role;
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "employees", uniqueConstraints = {
@@ -60,6 +63,12 @@ public class Employee {
     }
 
     // Getters and Setters
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .collect(Collectors.toList());
+    }
+
     public UUID getId() {
         return id;
     }

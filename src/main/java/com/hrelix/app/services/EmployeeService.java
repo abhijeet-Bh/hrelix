@@ -4,11 +4,12 @@ import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.models.Employee;
 import com.hrelix.app.models.mappers.EmployeeMapper;
 import com.hrelix.app.repositories.EmployeeRepository;
-import com.hrelix.app.utils.ApiResponse;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -24,6 +26,8 @@ public class EmployeeService {
     // Create a new employee
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
         Employee employee = EmployeeMapper.toEntity(employeeDTO);
+        String hashedPassword = passwordEncoder.encode(employee.getPassword());
+        employee.setPassword(hashedPassword);
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.toDTO(savedEmployee);
     }
@@ -34,10 +38,18 @@ public class EmployeeService {
         return employees.stream().map(EmployeeMapper::toDTO).collect(Collectors.toList());
     }
 
-    // Retrieve employee by ID
-    public EmployeeDTO getEmployeeById(UUID id) {
-        return employeeRepository.findById(id)
-                .map(EmployeeMapper::toDTO)
-                .orElse(null);
+    // Retrieve employee by Email
+    public Employee findByEmail(String email) throws Exception{
+        Optional<Employee> employee =  employeeRepository.getEmployeeByEmail(email);
+        if(employee.isPresent()){
+            return employee.get();
+        }else{
+            throw new Exception("Employee Not Found!");
+        }
+    }
+
+    // Retrieve employee by Email
+    public Employee findById(UUID id) {
+        return employeeRepository.getEmployeeByid(id);
     }
 }

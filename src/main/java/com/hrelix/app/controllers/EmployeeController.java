@@ -2,12 +2,16 @@ package com.hrelix.app.controllers;
 
 
 import com.hrelix.app.dtos.EmployeeDTO;
+import com.hrelix.app.models.Employee;
+import com.hrelix.app.models.mappers.EmployeeMapper;
 import com.hrelix.app.services.EmployeeService;
 import com.hrelix.app.utils.ApiResponse;
 import com.hrelix.app.utils.ErrorResponse;
 import com.hrelix.app.utils.SuccessResponse;
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,11 +51,11 @@ public class EmployeeController {
 
     // GET: Retrieve a specific employee by ID
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable UUID id) {
-        EmployeeDTO employee = employeeService.getEmployeeById(id);
-        if (employee != null) {
-            return new ResponseEntity<>(employee, HttpStatus.OK);
-        } else {
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable String id) {
+        try{
+        Employee employee = employeeService.findByEmail(id);
+        return new ResponseEntity<>(EmployeeMapper.toDTO(employee), HttpStatus.OK);
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
