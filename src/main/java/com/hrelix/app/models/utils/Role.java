@@ -5,5 +5,10 @@ public enum Role {
     EMPLOYEE,
     HR,
     ADMIN,
-    MANAGER
+    MANAGER;
+
+    @Override
+    public String toString() {
+        return "ROLE_" + this.name();
+    }
 }
