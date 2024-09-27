@@ -7,8 +7,8 @@ public class ErrorResponse extends ApiResponse {
     @JsonProperty("data")
     private String message;
 
-    public ErrorResponse(boolean success, int statusCode, String message) {
-        super(success, statusCode); // Call to the parent constructor
+    public ErrorResponse(int statusCode, String message) {
+        super(false, statusCode); // Call to the parent constructor
         this.message = message;
     }
 
