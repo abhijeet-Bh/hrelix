@@ -7,7 +7,6 @@
 ![OpenJDK Badge](https://img.shields.io/badge/OpenJDK-000?logo=openjdk&logoColor=fff&style=flat-square)
 ![PostgreSQL Badge](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=fff&style=flat-square)
 ![Docker Badge](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=flat-square)
----
 
 ## Overview
 
@@ -37,7 +36,7 @@ be accessed by only authentic users.
 - Integration with PostgreSQL for persistent storage.
 - Dockerized application for easy deployment.
 
----
+
 ## Getting Started
 
 ### 1. Clone this repository
@@ -78,7 +77,7 @@ You can run the application using `Maven` or `Docker`.
 
    This command will start the Spring Boot application and PostgreSQL database in Docker containers.
 
----
+
 ## API Documentation
 
 ### Endpoints

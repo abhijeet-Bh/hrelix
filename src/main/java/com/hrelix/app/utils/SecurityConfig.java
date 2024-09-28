@@ -29,16 +29,23 @@ public class SecurityConfig {
     private JwtFilter jwtFilter;
     @Autowired
     private CustomAccessDeniedHandler accessDeniedHandler;
+    @Autowired
+    private CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/api/v1/healthz").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/employees/register").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
+                .exceptionHandling(handling -> {
+                    handling.accessDeniedHandler(accessDeniedHandler);
+                    handling.authenticationEntryPoint(authenticationEntryPoint);
+                })
                 .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
     }
