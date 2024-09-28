@@ -4,9 +4,8 @@ import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.models.Employee;
 import com.hrelix.app.models.mappers.EmployeeMapper;
 import com.hrelix.app.repositories.EmployeeRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,11 +38,11 @@ public class EmployeeService {
     }
 
     // Retrieve employee by Email
-    public Employee findByEmail(String email) throws Exception{
-        Optional<Employee> employee =  employeeRepository.getEmployeeByEmail(email);
-        if(employee.isPresent()){
+    public Employee findByEmail(String email) throws Exception {
+        Optional<Employee> employee = employeeRepository.getEmployeeByEmail(email);
+        if (employee.isPresent()) {
             return employee.get();
-        }else{
+        } else {
             throw new Exception("Employee Not Found!");
         }
     }
