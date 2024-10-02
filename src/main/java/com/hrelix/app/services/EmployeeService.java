@@ -4,6 +4,7 @@ import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.models.Employee;
 import com.hrelix.app.models.mappers.EmployeeMapper;
 import com.hrelix.app.repositories.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,9 @@ import java.util.stream.Collectors;
 @Service
 public class EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     // Create a new employee
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
