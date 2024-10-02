@@ -1,4 +1,5 @@
 ![Banner](docs/assets/HRelix-banner.png)
+
 # HRelix - HR Management System
 
 ![Spring Boot Badge](https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=fff&style=flat-square)
@@ -18,8 +19,8 @@ For Security of endpoints and app, This project implements `spring-security`. Al
 be accessed by only authentic users.
 
 ### Documentation
-[![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/38347451/2sAXqy4fXM)
 
+[![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/38347451/2sAXqy4fXM)
 
 ### Project Dependencies
 
@@ -36,13 +37,14 @@ be accessed by only authentic users.
 - Integration with PostgreSQL for persistent storage.
 - Dockerized application for easy deployment.
 
-
 ## Getting Started
 
 ### 1. Clone this repository
+
 ```shell
 https://github.com/abhijeet-Bh/hrelix.git
 ```
+
 ### 2. Build the application
 
    ```shell
@@ -58,50 +60,85 @@ You can run the application using `Maven` or `Docker`.
 1. **Run the Spring Boot application:**
 
    ```shell
-   mvn spring-boot:run
+   ./mvnw spring-boot:run
    ```
 
    The application will start on `http://localhost:8080`.
+
 
 2. **Connect to the PostgreSQL database:**
 
    Ensure PostgreSQL is running and configured as per `application.properties`.
 
+   ```.properties
+   spring.application.name=app
+   spring.datasource.url=jdbc:postgresql://localhost:5432/<your-database-name>
+   spring.datasource.username=<your-db-usename>
+   spring.datasource.password=<your-password>
+   spring.datasource.driver-class-name=org.postgresql.Driver
+   
+   ## Hibernate (JPA) Properties
+   spring.jpa.hibernate.ddl-auto=update
+   spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+   ```
+
+---
+
 #### B. Running with Docker:
 
 1. **Build and run the Docker containers:**
+
+   To run with docker-compose, you just need to setup `.env` file in the root directory as given below
+
+   ```.env
+   # PostgreSQL database configuration for Docker
+   POSTGRES_DB=<your-db-name>
+   POSTGRES_USER=<your-db-user>
+   POSTGRES_PASSWORD=<your-db-password>
+   SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/<your-db>
+   SPRING_DATASOURCE_USERNAME=<your-db-name>
+   SPRING_DATASOURCE_PASSWORD=<your-db-user>
+   SPRING_JPA_HIBERNATE_DDL_AUTO=update
+   ```
+
+   > *Now, you can run below command to run `HRelix` app :)*
 
    ```bash
    docker-compose up --build
    ```
 
-   This command will start the Spring Boot application and PostgreSQL database in Docker containers.
+This command will start the Spring Boot application and PostgreSQL database in Docker containers.
 
+> **Note** :- *Since, all endpoints are secured. You'll need to create `admin` when you run this app for the first time.
+To do that go to the `api/v1/admin/register` endpoint and create `Admin` first :)*
 
 ## API Documentation
 
 ### Endpoints
-Here’s a list of all **API endpoints** for the **HR Management System**. These endpoints cover the main functionalities for managing employees, leave requests, payroll, performance reviews, and attendance tracking.
+
+Here’s a list of all **API endpoints** for the **HR Management System**. These endpoints cover the main functionalities
+for managing employees, leave requests, payroll, performance reviews, and attendance tracking.
 
 ### **1. Public Endpoints**
 
 These endpoints handle public-related operations such as `health-check` and `login`.
 
-| HTTP Method | Endpoint             | Description                                | Access Role |
-|-------------|----------------------|--------------------------------------------|-------------|
-| **GET**     | `/api/v1/healthz`    | Check running status of the backend        | OPEN        |
-| **GET**     | `/api/v1/auth/login` | Login employee with `email` and `password` | OPEN        |
-
+| HTTP Method | Endpoint                 | Description                                                     | Access Role |
+|-------------|--------------------------|-----------------------------------------------------------------|-------------|
+| **GET**     | `/api/v1/healthz`        | Check running status of the backend                             | OPEN        |
+| **GET**     | `/api/v1/auth/login`     | Login employee with `email` and `password`                      | OPEN        |
+| **GET**     | `/api/v1/admin/register` | This is to create `admin` when running this for the first time. | OPEN        |
 
 ### **2. Employee Management Endpoints**
 
 These endpoints handle employee-related operations such as creating, reading, updating, and deleting employee records.
 
-| HTTP Method | Endpoint                     | Description                                  | Access Role                |
-|-------------|------------------------------|----------------------------------------------|----------------------------|
-| **POST**    | `/api/v1/employees/register` | Create a new employee                        | ADMIN, HR                  |
-| **GET**     | `/api/v1/employees`          | Get a list of all employees                  | ADMIN, HR                  |
+| HTTP Method | Endpoint                     | Description                          | Access Role |
+|-------------|------------------------------|--------------------------------------|-------------|
+| **POST**    | `/api/v1/employees/register` | Create a new employee                | ADMIN, HR   |
+| **GET**     | `/api/v1/employees`          | Get a list of all employees          | ADMIN, HR   |
+| **GET**     | `/api/v1/employees/{id}`     | Get a employee detail by employee id | ADMIN, HR   |
 
-> This project is still under development and more endpoints and features will be updated.
+> *This project is still under development and more endpoints and features will be updated.*
 
 Thanks :)

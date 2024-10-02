@@ -8,10 +8,8 @@ import com.hrelix.app.services.EmployeeService;
 import com.hrelix.app.utils.ApiResponse;
 import com.hrelix.app.utils.ErrorResponse;
 import com.hrelix.app.utils.SuccessResponse;
-import org.apache.catalina.mapper.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +31,19 @@ public class EmployeeController {
         try {
             EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
             return new ResponseEntity<>(new SuccessResponse<EmployeeDTO>(true, 201, createdEmployee), HttpStatus.CREATED);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(new ErrorResponse(403, e.getMessage()), HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    // GET: Retrieve a specific employee by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getEmployeeById(@PathVariable String id) {
+        try {
+            Employee employee = employeeService.findById(UUID.fromString(id));
+            return new ResponseEntity<>(new SuccessResponse<>(true, 200, EmployeeMapper.toDTO(employee)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse(404, "Employee Not Found!"), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -44,19 +53,8 @@ public class EmployeeController {
         try {
             List<EmployeeDTO> employees = employeeService.getAllEmployees();
             return new ResponseEntity<>(new SuccessResponse<>(true, 200, employees), HttpStatus.OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(new ErrorResponse(403, "Something went wrong!"), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // GET: Retrieve a specific employee by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable String id) {
-        try{
-        Employee employee = employeeService.findByEmail(id);
-        return new ResponseEntity<>(EmployeeMapper.toDTO(employee), HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }

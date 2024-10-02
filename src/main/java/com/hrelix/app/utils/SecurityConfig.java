@@ -34,12 +34,12 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/v1/healthz").permitAll()
-                                .requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/employees/profile").authenticated()
-                                .requestMatchers("/api/v1/employees/*").hasRole("ADMIN")
-//                                .requestMatchers("/api/v1/employees/register").permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers("/api/v1/healthz").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/admin/register").permitAll()
+                        .requestMatchers("/api/v1/employees/profile").authenticated()
+                        .requestMatchers("/api/v1/employees/*").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> {
                     handling.accessDeniedHandler(accessDeniedHandler);
