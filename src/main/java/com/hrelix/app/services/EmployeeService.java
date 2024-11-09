@@ -3,11 +3,14 @@ package com.hrelix.app.services;
 import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.models.Employee;
 import com.hrelix.app.models.mappers.EmployeeMapper;
+import com.hrelix.app.models.utils.Role;
 import com.hrelix.app.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +28,10 @@ public class EmployeeService {
         Employee employee = EmployeeMapper.toEntity(employeeDTO);
         String hashedPassword = passwordEncoder.encode(employee.getPassword());
         employee.setPassword(hashedPassword);
+        employee.setJoiningDate(LocalDate.now());
+
+        employee.setRoles(Collections.singletonList(Role.EMPLOYEE));
+
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.toDTO(savedEmployee);
     }

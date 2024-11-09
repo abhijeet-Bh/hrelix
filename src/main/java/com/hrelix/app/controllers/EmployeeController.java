@@ -43,7 +43,7 @@ public class EmployeeController {
             Employee employee = employeeService.findById(UUID.fromString(id));
             return new ResponseEntity<>(new SuccessResponse<>(true, 200, EmployeeMapper.toDTO(employee)), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(404, "Employee Not Found!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ErrorResponse(404, e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 

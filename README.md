@@ -48,7 +48,7 @@ https://github.com/abhijeet-Bh/hrelix.git
 ### 2. Build the application
 
    ```shell
-   mvn clean install
+   ./mvnw clean install
    ```
 
 ### 3. Running the Application
@@ -123,13 +123,23 @@ for managing employees, leave requests, payroll, performance reviews, and attend
 
 These endpoints handle public-related operations such as `health-check` and `login`.
 
-| HTTP Method | Endpoint                 | Description                                                     | Access Role |
-|-------------|--------------------------|-----------------------------------------------------------------|-------------|
-| **GET**     | `/api/v1/healthz`        | Check running status of the backend                             | OPEN        |
-| **GET**     | `/api/v1/auth/login`     | Login employee with `email` and `password`                      | OPEN        |
-| **GET**     | `/api/v1/admin/register` | This is to create `admin` when running this for the first time. | OPEN        |
+| HTTP Method | Endpoint             | Description                                | Access Role |
+|-------------|----------------------|--------------------------------------------|-------------|
+| **GET**     | `/api/v1/healthz`    | Check running status of the backend        | OPEN        |
+| **GET**     | `/api/v1/auth/login` | Login employee with `email` and `password` | OPEN        |
 
-### **2. Employee Management Endpoints**
+### **2. Public Endpoints**
+
+These endpoints handle public-related operations such as `health-check` and `login`.
+
+| HTTP Method | Endpoint                                      | Description                                                                           | Access Role |
+|-------------|-----------------------------------------------|---------------------------------------------------------------------------------------|-------------|
+| **POST**    | `/api/v1/admin/register`                      | This is to create `admin` when running this for the first time.                       | OPEN        |
+| **POST**    | `/api/v1/admin/create-new-employee-with-role` | This is to create `new-employee` with different roles  like `HR`, `EMPLOYEE`, `ADMIN` | ADMIN       |
+| **POST**    | `/api/v1/admin/delete-employee/{id}`          | This is to delete and employee.                                                       | ADMIN       |
+| **POST**    | `/api/v1/admin/update-role/{id}`              | This is to update roles of the employee.                                              | ADMIN       |
+
+### **3. Employee Management Endpoints**
 
 These endpoints handle employee-related operations such as creating, reading, updating, and deleting employee records.
 

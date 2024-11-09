@@ -37,8 +37,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/healthz").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/admin/register").permitAll()
+                        .requestMatchers("/api/v1/admin/*").hasRole("ADMIN")
                         .requestMatchers("/api/v1/employees/profile").authenticated()
-                        .requestMatchers("/api/v1/employees/*").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/employees/register").hasAnyAuthority("ROLE_HR", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(handling -> {
