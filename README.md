@@ -112,6 +112,9 @@ This command will start the Spring Boot application and PostgreSQL database in D
 > **Note** :- *Since, all endpoints are secured. You'll need to create `admin` when you run this app for the first time.
 To do that go to the `api/v1/admin/register` endpoint and create `Admin` first :)*
 
+![Banner](docs/assets/home-screen.png)
+> `http://localhost:8080/` will show you this screen
+
 ## API Documentation
 
 ### Endpoints
@@ -128,9 +131,10 @@ These endpoints handle public-related operations such as `health-check` and `log
 | **GET**     | `/api/v1/healthz`    | Check running status of the backend        | OPEN        |
 | **GET**     | `/api/v1/auth/login` | Login employee with `email` and `password` | OPEN        |
 
-### **2. Public Endpoints**
+### **2. Admin Endpoints**
 
-These endpoints handle public-related operations such as `health-check` and `login`.
+These endpoints handle admin-related operations such as `create-new-employee`, `change-employee-role` or
+`delete-an-employee` etc.
 
 | HTTP Method | Endpoint                                      | Description                                                                           | Access Role |
 |-------------|-----------------------------------------------|---------------------------------------------------------------------------------------|-------------|

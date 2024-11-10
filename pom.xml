@@ -50,6 +50,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Thymeleaf for rendering HTML templates -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
