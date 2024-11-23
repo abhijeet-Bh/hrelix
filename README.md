@@ -18,9 +18,19 @@ scaling.
 For Security of endpoints and app, This project implements `spring-security`. All endpoints (if required) are secured to
 be accessed by only authentic users.
 
-### Documentation
+### System Architecture
+
+![Banner](docs/assets/hrelix-arch.png)
+
+### Documentation & Deployed Link
+
+> Check out all the documentations of the endpoints from this link below :)
 
 [![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/38347451/2sAXqy4fXM)
+
+> This project is hosted on AWS you can test it from this link below :)
+
+[![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white)](http://http://35.154.121.96:8080/)
 
 ### Project Dependencies
 
@@ -71,15 +81,22 @@ You can run the application using `Maven` or `Docker`.
    Ensure PostgreSQL is running and configured as per `application.properties`.
 
    ```.properties
+   spring.config.import=optional:file:.env[.properties]
    spring.application.name=app
-   spring.datasource.url=jdbc:postgresql://localhost:5432/<your-database-name>
-   spring.datasource.username=<your-db-usename>
-   spring.datasource.password=<your-password>
+   spring.datasource.url=${PRODUCTION_DATABASE_URL}
+   spring.datasource.username=${PRODUCTION_DATABASE_USERNAME}
+   spring.datasource.password=${PRODUCTION_DATABASE_PASSWORD}
    spring.datasource.driver-class-name=org.postgresql.Driver
    
    ## Hibernate (JPA) Properties
+   
    spring.jpa.hibernate.ddl-auto=update
    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+   spring.thymeleaf.prefix=classpath:/templates/
+   spring.thymeleaf.suffix=.html
+   spring.thymeleaf.mode=HTML
+   spring.thymeleaf.encoding=UTF-8
+   spring.thymeleaf.cache=false
    ```
 
 ---
@@ -91,14 +108,18 @@ You can run the application using `Maven` or `Docker`.
    To run with docker-compose, you just need to setup `.env` file in the root directory as given below
 
    ```.env
-   # PostgreSQL database configuration for Docker
-   POSTGRES_DB=<your-db-name>
-   POSTGRES_USER=<your-db-user>
-   POSTGRES_PASSWORD=<your-db-password>
-   SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/<your-db>
-   SPRING_DATASOURCE_USERNAME=<your-db-name>
-   SPRING_DATASOURCE_PASSWORD=<your-db-user>
+   POSTGRES_DB=hrelix
+   POSTGRES_USER=<db-user-name>
+   POSTGRES_PASSWORD=<db-password>
+   SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/hrelix
+   SPRING_DATASOURCE_USERNAME=<db-user-name>
+   SPRING_DATASOURCE_PASSWORD=<db-password>
    SPRING_JPA_HIBERNATE_DDL_AUTO=update
+   
+   #Production database
+   PRODUCTION_DATABASE_URL=<db-url>
+   PRODUCTION_DATABASE_USERNAME=<db-user-name>
+   PRODUCTION_DATABASE_PASSWORD=<db-password>
    ```
 
    > *Now, you can run below command to run `HRelix` app :)*
