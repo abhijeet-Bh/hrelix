@@ -30,7 +30,7 @@ be accessed by only authentic users.
 
 > This project is hosted on AWS you can test it from this link below :)
 
-[![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white)](http://http://35.154.121.96:8080/)
+[![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white)](http://35.154.121.96:8080/)
 
 ### Project Dependencies
 
