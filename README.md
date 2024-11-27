@@ -168,11 +168,11 @@ These endpoints handle admin-related operations such as `create-new-employee`, `
 
 These endpoints handle employee-related operations such as creating, reading, updating, and deleting employee records.
 
-| HTTP Method | Endpoint                     | Description                          | Access Role |
-|-------------|------------------------------|--------------------------------------|-------------|
-| **POST**    | `/api/v1/employees/register` | Create a new employee                | ADMIN, HR   |
-| **GET**     | `/api/v1/employees`          | Get a list of all employees          | ADMIN, HR   |
-| **GET**     | `/api/v1/employees/{id}`     | Get a employee detail by employee id | ADMIN, HR   |
+| HTTP Method | Endpoint                     | Description                                                                                                         | Access Role |
+|-------------|------------------------------|---------------------------------------------------------------------------------------------------------------------|-------------|
+| **POST**    | `/api/v1/employees/register` | Create a new employee                                                                                               | ADMIN, HR   |
+| **GET**     | `/api/v1/employees`          | Get a list of all employees *(this endpoint is open to all for testing but needs access toke, so login before use)* | OPEN        |
+| **GET**     | `/api/v1/employees/{id}`     | Get a employee detail by employee id                                                                                | ADMIN, HR   |
 
 > *This project is still under development and more endpoints and features will be updated.*
 
