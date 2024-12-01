@@ -8,6 +8,7 @@ import com.hrelix.app.services.EmployeeService;
 import com.hrelix.app.utils.ApiResponse;
 import com.hrelix.app.utils.ErrorResponse;
 import com.hrelix.app.utils.SuccessResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/employees")
+@Tag(name = "Employee Endpoints", description = "Operations related to Employee for HR and Employee")
 public class EmployeeController {
 
     private final EmployeeService employeeService;

@@ -1,6 +1,7 @@
 package com.hrelix.app.dtos;
 
 import com.hrelix.app.models.utils.Role;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Hidden
 public class RoleDto {
     private List<Role> roles;
 }

@@ -6,6 +6,8 @@ import com.hrelix.app.services.AdminService;
 import com.hrelix.app.utils.ApiResponse;
 import com.hrelix.app.utils.ErrorResponse;
 import com.hrelix.app.utils.SuccessResponse;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/admin")
+@Tag(name = "Admin Endpoints", description = "Operations related to Employee for Admin")
 public class AdminController {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -21,6 +24,7 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping("/register")
+    @Hidden
     public ResponseEntity<ApiResponse> registerAdmin(@RequestBody EmployeeDTO adminDTO) {
         try {
             EmployeeDTO emp = adminService.createAdmin(adminDTO);
