@@ -1,25 +1,42 @@
-version: "3.9"
 services:
   postgres:
-    image: postgres:15
-    container_name: dev-postgres
+    container_name: postgres
+    image: postgres
     environment:
-      POSTGRES_USER: root101
-      POSTGRES_PASSWORD: pass101
-      POSTGRES_DB: hrelix
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root101
+      PGDATA: /data/postgres
+
+    volumes:
+      - postgres:/data/postgres
     ports:
       - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - postgres
+
+    restart: unless-stopped
 
   pgadmin:
-    image: dpage/pgadmin4:6
-    container_name: dev-pgadmin
+    container_name: pgadmin
+    image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@local.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-root@email.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-root101}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+
     ports:
-      - "8081:80" # PgAdmin now runs on port 8081
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+
+networks:
+  postgres:
+    driver: bridge
 
 volumes:
-  postgres-data:
+  postgres:
+  pgadmin:
