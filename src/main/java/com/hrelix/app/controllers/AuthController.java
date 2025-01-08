@@ -2,9 +2,9 @@ package com.hrelix.app.controllers;
 
 import com.hrelix.app.models.AuthRequest;
 import com.hrelix.app.models.Employee;
+import com.hrelix.app.models.ErrorResponse;
 import com.hrelix.app.services.EmployeeService;
 import com.hrelix.app.utils.ApiResponse;
-import com.hrelix.app.utils.ErrorResponse;
 import com.hrelix.app.utils.JwtUtils;
 import com.hrelix.app.utils.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +41,7 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
             );
             final Employee userDetails = employeeService.findByEmail(authRequest.getEmail());
-            String accessToken = jwtUtil.generateToken(userDetails.getId().toString());
+            String accessToken = jwtUtil.generateToken(userDetails);
             return new ResponseEntity<>(new SuccessResponse<String>(true, 200, accessToken), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ErrorResponse(403, e.getMessage()), HttpStatus.BAD_GATEWAY);

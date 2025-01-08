@@ -3,8 +3,8 @@ package com.hrelix.app.services;
 import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.dtos.RoleDto;
 import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.mappers.EmployeeMapper;
-import com.hrelix.app.models.utils.Role;
+import com.hrelix.app.models.EmployeeMapper;
+import com.hrelix.app.models.Role;
 import com.hrelix.app.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,7 +22,7 @@ public class AdminService {
     private EmployeeRepository employeeRepository;
 
     public void deleteEmployee(String id) throws Exception {
-        Employee employee = employeeRepository.getEmployeeByid(UUID.fromString(id));
+        Employee employee = employeeRepository.getEmployeeById(UUID.fromString(id));
         if (employee == null) {
             throw new Exception("No Employee with this id!");
         }
@@ -67,7 +67,7 @@ public class AdminService {
     }
 
     public EmployeeDTO updateRole(RoleDto roleDto, String id) throws Exception {
-        Employee emp = employeeRepository.getEmployeeByid(UUID.fromString(id));
+        Employee emp = employeeRepository.getEmployeeById(UUID.fromString(id));
         if (emp == null) {
             throw new Exception("No Employee with this id!");
         }

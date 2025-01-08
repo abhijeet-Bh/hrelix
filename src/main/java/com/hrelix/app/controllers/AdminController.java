@@ -2,9 +2,9 @@ package com.hrelix.app.controllers;
 
 import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.dtos.RoleDto;
+import com.hrelix.app.models.ErrorResponse;
 import com.hrelix.app.services.AdminService;
 import com.hrelix.app.utils.ApiResponse;
-import com.hrelix.app.utils.ErrorResponse;
 import com.hrelix.app.utils.SuccessResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;

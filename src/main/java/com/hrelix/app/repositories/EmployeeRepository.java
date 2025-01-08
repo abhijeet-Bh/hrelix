@@ -15,5 +15,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     Optional<Employee> getEmployeeByPhone(String phone);
 
-    Employee getEmployeeByid(UUID id);
+    Employee getEmployeeById(UUID id);
 }

@@ -2,8 +2,8 @@ package com.hrelix.app.services;
 
 import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.mappers.EmployeeMapper;
-import com.hrelix.app.models.utils.Role;
+import com.hrelix.app.models.EmployeeMapper;
+import com.hrelix.app.models.Role;
 import com.hrelix.app.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -56,7 +56,7 @@ public class EmployeeService {
 
     // Retrieve employee by Email
     public Employee findById(UUID id) {
-        return employeeRepository.getEmployeeByid(id);
+        return employeeRepository.getEmployeeById(id);
     }
 
     public boolean deleteEmployee(Employee employee) {
@@ -70,7 +70,7 @@ public class EmployeeService {
     }
 
     public EmployeeDTO updateEmployee(EmployeeDTO employee, UUID id) {
-        Employee emp = employeeRepository.getEmployeeByid(id);
+        Employee emp = employeeRepository.getEmployeeById(id);
         if (emp == null) {
             throw new IllegalArgumentException("Employee Not Found!");
         } else {

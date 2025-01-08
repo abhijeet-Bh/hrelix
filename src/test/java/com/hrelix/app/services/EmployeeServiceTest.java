@@ -2,8 +2,8 @@ package com.hrelix.app.services;
 
 import com.hrelix.app.dtos.EmployeeDTO;
 import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.mappers.EmployeeMapper;
-import com.hrelix.app.models.utils.Role;
+import com.hrelix.app.models.EmployeeMapper;
+import com.hrelix.app.models.Role;
 import com.hrelix.app.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

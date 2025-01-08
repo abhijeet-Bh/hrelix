@@ -1,7 +1,7 @@
 package com.hrelix.app.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hrelix.app.models.utils.Role;
+import com.hrelix.app.models.Role;
 import lombok.*;
 
 import java.time.LocalDate;

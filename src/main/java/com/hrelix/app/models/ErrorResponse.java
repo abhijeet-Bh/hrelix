@@ -1,7 +1,12 @@
-package com.hrelix.app.utils;
+package com.hrelix.app.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hrelix.app.utils.ApiResponse;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class ErrorResponse extends ApiResponse {
 
     @JsonProperty("data")
@@ -12,11 +17,4 @@ public class ErrorResponse extends ApiResponse {
         this.message = message;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }
