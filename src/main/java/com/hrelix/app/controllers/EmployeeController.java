@@ -11,6 +11,7 @@ import com.hrelix.app.utils.SuccessResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,8 @@ public class EmployeeController {
     }
 
     // POST: Create a new employee
-    @PostMapping("/register")
+    @PostMapping()
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
     public ResponseEntity<ApiResponse> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
         try {
             EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
@@ -59,4 +61,36 @@ public class EmployeeController {
             return new ResponseEntity<>(new ErrorResponse(403, "Something went wrong!"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    // DELETE: Delete employee
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
+    public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable UUID id) {
+        Employee employee = employeeService.findById(id);
+        if (employee != null && employeeService.deleteEmployee(employee)) {
+            return new ResponseEntity<>(new SuccessResponse<>(true, 200, "Employee Deleted"), HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(new ErrorResponse(404, "Employee Not Found!"), HttpStatus.NOT_FOUND);
+    }
+
+    // PUT : update Employee Details
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
+    public ResponseEntity<ApiResponse> updateEmployee(@PathVariable UUID id, @RequestBody EmployeeDTO employee) {
+        try {
+            EmployeeDTO updatedEmployee = employeeService.updateEmployee(employee, id);
+            return new ResponseEntity<>(new SuccessResponse<>(true, 200, updatedEmployee), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(new ErrorResponse(503, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // GET: Profile od current user
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse> getProfile() {
+        EmployeeDTO profile = employeeService.getProfile();
+        return new ResponseEntity<>(new SuccessResponse<>(true, 200, profile), HttpStatus.OK);
+    }
+
 }

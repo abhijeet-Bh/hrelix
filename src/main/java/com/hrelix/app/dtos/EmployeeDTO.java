@@ -2,10 +2,7 @@ package com.hrelix.app.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hrelix.app.models.utils.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EmployeeDTO {
 
     // Getters and Setters
