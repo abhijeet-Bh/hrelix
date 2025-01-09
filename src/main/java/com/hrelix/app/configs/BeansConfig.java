@@ -1,4 +1,4 @@
-package com.hrelix.app.utils;
+package com.hrelix.app.configs;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

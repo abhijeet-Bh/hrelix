@@ -1,6 +1,6 @@
-package com.hrelix.app.utils;
+package com.hrelix.app.configs;
 
-import com.hrelix.app.services.EmployeeDetailService;
+import com.hrelix.app.employee.EmployeeDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

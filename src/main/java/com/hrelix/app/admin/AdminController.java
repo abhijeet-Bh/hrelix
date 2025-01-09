@@ -1,11 +1,10 @@
-package com.hrelix.app.controllers;
+package com.hrelix.app.admin;
 
-import com.hrelix.app.dtos.EmployeeDTO;
-import com.hrelix.app.dtos.RoleDto;
-import com.hrelix.app.models.ErrorResponse;
-import com.hrelix.app.services.AdminService;
-import com.hrelix.app.utils.ApiResponse;
-import com.hrelix.app.utils.SuccessResponse;
+import com.hrelix.app.employee.EmployeeDTO;
+import com.hrelix.app.employee.RoleDto;
+import com.hrelix.app.utilities.ApiResponse;
+import com.hrelix.app.utilities.ErrorResponse;
+import com.hrelix.app.utilities.SuccessResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

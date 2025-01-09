@@ -1,6 +1,5 @@
-package com.hrelix.app.dtos;
+package com.hrelix.app.employee;
 
-import com.hrelix.app.models.Role;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

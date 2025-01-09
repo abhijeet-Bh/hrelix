@@ -1,7 +1,5 @@
-package com.hrelix.app.services;
+package com.hrelix.app.employee;
 
-import com.hrelix.app.models.Employee;
-import com.hrelix.app.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,4 +1,4 @@
-package com.hrelix.app.models;
+package com.hrelix.app.auth;
 
 import lombok.Getter;
 import lombok.Setter;

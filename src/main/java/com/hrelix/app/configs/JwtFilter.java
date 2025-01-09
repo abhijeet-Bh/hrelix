@@ -1,4 +1,4 @@
-package com.hrelix.app.utils;
+package com.hrelix.app.configs;
 
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;

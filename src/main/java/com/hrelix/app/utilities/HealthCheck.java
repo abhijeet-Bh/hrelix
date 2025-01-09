@@ -1,7 +1,5 @@
-package com.hrelix.app.controllers;
+package com.hrelix.app.utilities;
 
-import com.hrelix.app.utils.ApiResponse;
-import com.hrelix.app.utils.SuccessResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

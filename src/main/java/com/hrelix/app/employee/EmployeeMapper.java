@@ -1,7 +1,5 @@
-package com.hrelix.app.models;
+package com.hrelix.app.employee;
 
-
-import com.hrelix.app.dtos.EmployeeDTO;
 
 public class EmployeeMapper {
 

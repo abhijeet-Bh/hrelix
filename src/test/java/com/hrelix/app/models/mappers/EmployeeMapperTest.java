@@ -1,9 +1,9 @@
 package com.hrelix.app.models.mappers;
 
-import com.hrelix.app.dtos.EmployeeDTO;
-import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.EmployeeMapper;
-import com.hrelix.app.models.Role;
+import com.hrelix.app.employee.EmployeeDTO;
+import com.hrelix.app.employee.Employee;
+import com.hrelix.app.employee.EmployeeMapper;
+import com.hrelix.app.employee.Role;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

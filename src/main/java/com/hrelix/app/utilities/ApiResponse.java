@@ -1,7 +1,9 @@
-package com.hrelix.app.utils;
+package com.hrelix.app.utilities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public abstract class ApiResponse {
 
     @JsonProperty("success")
@@ -15,11 +17,4 @@ public abstract class ApiResponse {
         this.statusCode = statusCode;
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public int getStatusCode() {
-        return statusCode;
-    }
 }

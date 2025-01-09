@@ -1,4 +1,4 @@
-package com.hrelix.app.models;
+package com.hrelix.app.employee;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

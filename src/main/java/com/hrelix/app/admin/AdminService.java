@@ -1,11 +1,11 @@
-package com.hrelix.app.services;
+package com.hrelix.app.admin;
 
-import com.hrelix.app.dtos.EmployeeDTO;
-import com.hrelix.app.dtos.RoleDto;
-import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.EmployeeMapper;
-import com.hrelix.app.models.Role;
-import com.hrelix.app.repositories.EmployeeRepository;
+import com.hrelix.app.employee.EmployeeDTO;
+import com.hrelix.app.employee.RoleDto;
+import com.hrelix.app.employee.Employee;
+import com.hrelix.app.employee.EmployeeMapper;
+import com.hrelix.app.employee.Role;
+import com.hrelix.app.employee.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

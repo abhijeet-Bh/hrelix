@@ -1,6 +1,6 @@
-package com.hrelix.app.services;
+package com.hrelix.app.auth;
 
-import com.hrelix.app.repositories.EmployeeRepository;
+import com.hrelix.app.employee.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

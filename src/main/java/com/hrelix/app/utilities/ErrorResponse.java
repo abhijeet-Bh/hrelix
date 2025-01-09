@@ -1,7 +1,6 @@
-package com.hrelix.app.models;
+package com.hrelix.app.utilities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.hrelix.app.utils.ApiResponse;
 import lombok.Getter;
 import lombok.Setter;
 

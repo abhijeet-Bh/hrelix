@@ -1,4 +1,4 @@
-package com.hrelix.app.controllers;
+package com.hrelix.app.utilities;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

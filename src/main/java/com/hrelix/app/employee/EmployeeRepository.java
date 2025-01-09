@@ -1,7 +1,6 @@
-package com.hrelix.app.repositories;
+package com.hrelix.app.employee;
 
 
-import com.hrelix.app.models.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

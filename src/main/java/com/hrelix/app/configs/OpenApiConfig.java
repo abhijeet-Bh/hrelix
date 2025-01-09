@@ -1,4 +1,4 @@
-package com.hrelix.app.utils;
+package com.hrelix.app.configs;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

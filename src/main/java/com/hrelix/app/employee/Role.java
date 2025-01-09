@@ -1,4 +1,4 @@
-package com.hrelix.app.models;
+package com.hrelix.app.employee;
 
 // Role E-Num
 public enum Role {

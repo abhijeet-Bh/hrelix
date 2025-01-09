@@ -1,10 +1,11 @@
 package com.hrelix.app.services;
 
-import com.hrelix.app.dtos.EmployeeDTO;
-import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.EmployeeMapper;
-import com.hrelix.app.models.Role;
-import com.hrelix.app.repositories.EmployeeRepository;
+import com.hrelix.app.employee.EmployeeDTO;
+import com.hrelix.app.employee.Employee;
+import com.hrelix.app.employee.EmployeeMapper;
+import com.hrelix.app.employee.EmployeeService;
+import com.hrelix.app.employee.Role;
+import com.hrelix.app.employee.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

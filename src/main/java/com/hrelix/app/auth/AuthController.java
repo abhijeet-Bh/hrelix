@@ -1,12 +1,11 @@
-package com.hrelix.app.controllers;
+package com.hrelix.app.auth;
 
-import com.hrelix.app.models.AuthRequest;
-import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.ErrorResponse;
-import com.hrelix.app.services.EmployeeService;
-import com.hrelix.app.utils.ApiResponse;
-import com.hrelix.app.utils.JwtUtils;
-import com.hrelix.app.utils.SuccessResponse;
+import com.hrelix.app.configs.JwtUtils;
+import com.hrelix.app.employee.Employee;
+import com.hrelix.app.employee.EmployeeService;
+import com.hrelix.app.utilities.ApiResponse;
+import com.hrelix.app.utilities.ErrorResponse;
+import com.hrelix.app.utilities.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

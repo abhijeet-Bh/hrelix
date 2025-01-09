@@ -1,13 +1,9 @@
-package com.hrelix.app.controllers;
+package com.hrelix.app.employee;
 
 
-import com.hrelix.app.dtos.EmployeeDTO;
-import com.hrelix.app.models.Employee;
-import com.hrelix.app.models.EmployeeMapper;
-import com.hrelix.app.models.ErrorResponse;
-import com.hrelix.app.services.EmployeeService;
-import com.hrelix.app.utils.ApiResponse;
-import com.hrelix.app.utils.SuccessResponse;
+import com.hrelix.app.utilities.ApiResponse;
+import com.hrelix.app.utilities.ErrorResponse;
+import com.hrelix.app.utilities.SuccessResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
