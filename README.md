@@ -30,7 +30,7 @@ be accessed by only authentic users.
 
 > This project is hosted on AWS you can test it from this link below :)
 
-[![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white)](http://hrelix.blufin.co.in/)
+[![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white)](https://hrelix.blufin.co.in/)
 
 ### Project Dependencies
 
@@ -63,78 +63,55 @@ https://github.com/abhijeet-Bh/hrelix.git
 
 ### 3. Running the Application
 
-You can run the application using `Maven` or `Docker`.
+You can run the application using `Maven` or `Maven-Wrapper`.
 
-#### A. Running with Maven:
+#### Running HRelix Application (you can use any of the ways):
 
-1. **Run the Spring Boot application:**
+1. **Setup database with Docker**
 
-   ```shell
-   ./mvnw spring-boot:run
-   ```
+- Before you run this application, make sure you have database setup, this can be done either of the ways using `Docker`
+  or simply installing `PostgreSQL` in your system.
 
-   The application will start on `http://localhost:8080`.
-
-
-2. **Connect to the PostgreSQL database:**
-
-   Ensure PostgreSQL is running and configured as per `application.properties`.
-
-   ```.properties
-   spring.config.import=optional:file:.env[.properties]
-   spring.application.name=app
-   spring.datasource.url=${PRODUCTION_DATABASE_URL}
-   spring.datasource.username=${PRODUCTION_DATABASE_USERNAME}
-   spring.datasource.password=${PRODUCTION_DATABASE_PASSWORD}
-   spring.datasource.driver-class-name=org.postgresql.Driver
-   
-   ## Hibernate (JPA) Properties
-   
-   spring.jpa.hibernate.ddl-auto=update
-   spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-   spring.thymeleaf.prefix=classpath:/templates/
-   spring.thymeleaf.suffix=.html
-   spring.thymeleaf.mode=HTML
-   spring.thymeleaf.encoding=UTF-8
-   spring.thymeleaf.cache=false
-   ```
-
----
-
-#### B. Running with Docker:
-
-1. **Build and run the Docker containers:**
-
-   To run with docker-compose, you just need to setup `.env` file in the root directory as given below
-
-   ```.env
-   POSTGRES_DB=hrelix
-   POSTGRES_USER=<db-user-name>
-   POSTGRES_PASSWORD=<db-password>
-   SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/hrelix
-   SPRING_DATASOURCE_USERNAME=<db-user-name>
-   SPRING_DATASOURCE_PASSWORD=<db-password>
-   SPRING_JPA_HIBERNATE_DDL_AUTO=update
-   
-   #Production database
-   PRODUCTION_DATABASE_URL=<db-url>
-   PRODUCTION_DATABASE_USERNAME=<db-user-name>
-   PRODUCTION_DATABASE_PASSWORD=<db-password>
-   ```
-
-   > *Now, you can run below command to run `HRelix` app :)*
+- If you want to use docker install docker in your system and then run the below code, this wi setup database in your
+  local system.
 
    ```bash
    docker-compose up --build
    ```
 
-This command will start the Spring Boot application and PostgreSQL database in Docker containers.
 
-> **Note** :- *Since, all endpoints are secured. You'll need to create `admin` when you run this app for the first time.
-To do that go to the `api/v1/admin/register` endpoint and create `Admin` first :)*
+2. **Run the Spring Boot application:**
 
-![Banner](docs/assets/home-screen.png)
-> `http://localhost:8080/` will show you this screen
+   ```shell
+   ./mvnw spring-boot:run -Dspring-boot.run.profiles=dev 
+   ```
+
+   The application will start on `http://localhost:8080`.
+
+---
+
+1. **Connect to the PostgreSQL database:**
+
+   Ensure PostgreSQL is running and configured as per `application.properties`.
+   Create `.env` file in the root directory and paste the below configuration.
+
+   ```.env
+   PRODUCTION_DATABASE_URL=<your-db-url>
+   PRODUCTION_DATABASE_USERNAME=<your-db-username>
+   PRODUCTION_DATABASE_PASSWORD=<your-db-password>
+   MAIL_USERNAME=<your-mail-host>
+   MAIL_PASSWORD=<your-mail-password>
+   ```
+
+2. **Run the Spring Boot application:**
+
+   ```shell
+   ./mvnw spring-boot:run -Dspring-boot.run.profiles=prod 
+   ```
+
+   The application will start on `http://localhost:8080`.
+
+---
 
 ## API Documentation
 
@@ -161,18 +138,38 @@ These endpoints handle admin-related operations such as `create-new-employee`, `
 |-------------|-----------------------------------------------|---------------------------------------------------------------------------------------|-------------|
 | **POST**    | `/api/v1/admin/register`                      | This is to create `admin` when running this for the first time.                       | OPEN        |
 | **POST**    | `/api/v1/admin/create-new-employee-with-role` | This is to create `new-employee` with different roles  like `HR`, `EMPLOYEE`, `ADMIN` | ADMIN       |
-| **POST**    | `/api/v1/admin/delete-employee/{id}`          | This is to delete and employee.                                                       | ADMIN       |
 | **POST**    | `/api/v1/admin/update-role/{id}`              | This is to update roles of the employee.                                              | ADMIN       |
 
-### **3. Employee Management Endpoints**
+Here’s a comprehensive list of possible and useful **API endpoints** for the **HR Management System**. These endpoints
+cover the main functionalities for managing employees, leave requests, payroll, performance reviews, and attendance
+tracking.
+
+### **1. Employee Management Endpoints**
 
 These endpoints handle employee-related operations such as creating, reading, updating, and deleting employee records.
 
-| HTTP Method | Endpoint                     | Description                                                                                                         | Access Role |
-|-------------|------------------------------|---------------------------------------------------------------------------------------------------------------------|-------------|
-| **POST**    | `/api/v1/employees/register` | Create a new employee                                                                                               | ADMIN, HR   |
-| **GET**     | `/api/v1/employees`          | Get a list of all employees *(this endpoint is open to all for testing but needs access toke, so login before use)* | OPEN        |
-| **GET**     | `/api/v1/employees/{id}`     | Get a employee detail by employee id                                                                                | ADMIN, HR   |
+| HTTP Method | Endpoint                 | Description                                  | Access Role                |
+|-------------|--------------------------|----------------------------------------------|----------------------------|
+| **POST**    | `/api/employees`         | Create a new employee                        | ADMIN, HR                  |
+| **GET**     | `/api/employees`         | Get a list of all employees                  | ADMIN, HR                  |
+| **GET**     | `/api/employees/{id}`    | Get employee details by ID                   | ADMIN, HR, EMPLOYEE (self) |
+| **PUT**     | `/api/employees/{id}`    | Update employee details                      | ADMIN, HR                  |
+| **DELETE**  | `/api/employees/{id}`    | Delete an employee                           | ADMIN, HR                  |
+| **GET**     | `/api/employees/search`  | Search employees by name, department, etc.   | ADMIN, HR                  |
+| **GET**     | `/api/employees/profile` | Get the current logged-in employee’s profile | EMPLOYEE                   |
+
+### **2. Leave Management Endpoints**
+
+These endpoints manage leave applications, approvals, and rejections.
+
+| HTTP Method | Endpoint                       | Description                                           | Access Role                |
+|-------------|--------------------------------|-------------------------------------------------------|----------------------------|
+| **POST**    | `/api/leaves`                  | Apply for a leave                                     | EMPLOYEE                   |
+| **GET**     | `/api/leaves`                  | Get a list of all leave requests (filtered by status) | ADMIN, HR, EMPLOYEE (self) |
+| **GET**     | `/api/leaves/{id}`             | Get leave request details by ID                       | ADMIN, HR, EMPLOYEE (self) |
+| **PUT**     | `/api/leaves/{id}/status`      | Approve or Reject a leave request                     | ADMIN, HR                  |
+| **GET**     | `/api/leaves/employee/{empId}` | Get all leave requests of an employee                 | ADMIN, HR                  |
+| **GET**     | `/api/leaves/types`            | Get available leave types (SICK, ANNUAL, etc.)        | ADMIN, HR, EMPLOYEE        |
 
 > *This project is still under development and more endpoints and features will be updated.*
 

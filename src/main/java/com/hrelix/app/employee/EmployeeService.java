@@ -1,5 +1,6 @@
 package com.hrelix.app.employee;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class EmployeeService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -92,20 +94,25 @@ public class EmployeeService {
 
         // Get user details from the authentication object
         if (authentication != null && authentication.isAuthenticated()) {
-            Employee principal = (Employee) authentication.getPrincipal();
+            try {
+                Employee principal = (Employee) authentication.getPrincipal();
 
-            return EmployeeDTO.builder()
-                    .id(principal.getId())
-                    .firstName(principal.getFirstName())
-                    .lastName(principal.getLastName())
-                    .email(principal.getEmail())
-                    .phone(principal.getPhone())
-                    .salary(principal.getSalary())
-                    .joiningDate(principal.getJoiningDate())
-                    .roles(principal.getRoles())
-                    .build();
+                return EmployeeDTO.builder()
+                        .id(principal.getId())
+                        .firstName(principal.getFirstName())
+                        .lastName(principal.getLastName())
+                        .email(principal.getEmail())
+                        .phone(principal.getPhone())
+                        .salary(principal.getSalary())
+                        .joiningDate(principal.getJoiningDate())
+                        .roles(principal.getRoles())
+                        .build();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                throw new RuntimeException("Something went wrong");
+            }
+        } else {
+            return null;
         }
-
-        return new EmployeeDTO();
     }
 }

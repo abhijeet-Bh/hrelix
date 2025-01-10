@@ -1,6 +1,6 @@
 package com.hrelix.app.configs;
 
-import com.hrelix.app.employee.EmployeeDetailService;
+import com.hrelix.app.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private EmployeeDetailService employeeDetailService;
+    private UserDetailsServiceImpl employeeDetailService;
     @Autowired
     private JwtFilter jwtFilter;
     @Autowired
