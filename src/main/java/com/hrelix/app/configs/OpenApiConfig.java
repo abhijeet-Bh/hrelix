@@ -18,12 +18,12 @@ import java.util.Arrays;
         info = @Info(
                 title = "HRelix HR Management System",
                 description = "API documentation for HRelix",
-                version = "2.1.0"
+                version = "2.4.0"
         ),
         servers = {
                 @Server(
                         description = "Production Environment",
-                        url = "https://hrelix.blufin.co.in"
+                        url = "http://hrelix.blufin.co.in"
                 ),
                 @Server(
                         description = "Local Environment",

@@ -32,9 +32,6 @@ WORKDIR /app
 # Copy the compiled Spring Boot jar file into the container
 COPY target/*.jar /app.jar
 
-# Copy your .env file into the container
-COPY .env /app/.env
-
 # Expose the port your Spring Boot app is running on (usually 8080)
 EXPOSE 8080
 
