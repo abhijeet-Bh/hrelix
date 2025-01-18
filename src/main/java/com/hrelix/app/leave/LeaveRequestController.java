@@ -1,6 +1,7 @@
 package com.hrelix.app.leave;
 
 import com.hrelix.app.utilities.ApiResponse;
+import com.hrelix.app.utilities.ErrorResponse;
 import com.hrelix.app.utilities.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public class LeaveRequestController {
         List<LeaveRequestDto> leaves = leaveRequestService.getEmployeeLeaveRequests(employeeId);
         return ResponseEntity.ok(
                 new SuccessResponse<>(
-                        "Retried Successfully!",
+                        "Retrieved Successfully!",
                         leaves
                 ));
     }
@@ -73,11 +74,11 @@ public class LeaveRequestController {
         if (leave.isPresent())
             return ResponseEntity.ok(
                     new SuccessResponse<>(
-                            "Retried Successfully!",
+                            "Retrieved Successfully!",
                             leave
                     ));
         else return ResponseEntity.status(404).body(
-                new SuccessResponse<>(
+                new ErrorResponse(
                         "Leave with this id not found!",
                         null
                 ));

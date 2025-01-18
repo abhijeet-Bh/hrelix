@@ -1,6 +1,7 @@
 package com.hrelix.app.leave;
 
 import com.hrelix.app.employee.Employee;
+import com.hrelix.app.exceptions.LeaveNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -66,12 +67,11 @@ public class LeaveRequestService {
 
     public LeaveRequestDto updateLeaveStatus(UUID id, LeaveStatus status, String comments) {
         LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Leave request not found with ID: " + id));
+                .orElseThrow(() -> new LeaveNotFoundException("Leave request not found with ID: " + id));
         leaveRequest.setStatus(status);
         leaveRequest.setComments(comments);
         try {
             LeaveRequest updatedLeave = leaveRequestRepository.save(leaveRequest);
-            Employee emp = leaveRequest.getEmployee();
             mailService.sendEmail(leaveRequest);
 
             return LeaveRequestDto.builder()
@@ -124,7 +124,7 @@ public class LeaveRequestService {
                     .comments(leave.getComments())
                     .build());
         } else {
-            return Optional.empty();
+            throw new LeaveNotFoundException("Leave with id: " + id + " Not Found!");
         }
     }
 }

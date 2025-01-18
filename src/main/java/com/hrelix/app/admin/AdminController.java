@@ -22,77 +22,44 @@ public class AdminController {
 
     @PostMapping("/register")
     @Hidden
-    public ResponseEntity<ApiResponse> registerAdmin(@RequestBody EmployeeDTO adminDTO) {
-        try {
-            EmployeeDTO emp = adminService.createAdmin(adminDTO);
-            return ResponseEntity.status(201).body(
-                    new SuccessResponse<>(
-                            "Admin Created Successfully!",
-                            emp
-                    ));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(503).body(
-                    new SuccessResponse<>(
-                            "failed to create Admin!",
-                            e.getMessage()
-                    ));
-        }
+    public ResponseEntity<ApiResponse> registerAdmin(@RequestBody EmployeeDTO adminDTO) throws Exception {
+        EmployeeDTO emp = adminService.createAdmin(adminDTO);
+        return ResponseEntity.status(201).body(
+                new SuccessResponse<>(
+                        "Admin Created Successfully!",
+                        emp
+                ));
+
     }
 
     @PostMapping("/create-new-employee-with-role")
-    public ResponseEntity<ApiResponse> createEmployee(@RequestBody EmployeeDTO employee) {
-        try {
-            EmployeeDTO emp = adminService.createEmployee(employee);
-            return ResponseEntity.status(201).body(
-                    new SuccessResponse<>(
-                            "New Employee created Successfully!",
-                            emp
-                    ));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "Failed to create Employee!",
-                            e.getMessage()
-                    ));
-        }
+    public ResponseEntity<ApiResponse> createEmployee(@RequestBody EmployeeDTO employee) throws Exception {
+        EmployeeDTO emp = adminService.createEmployee(employee);
+        return ResponseEntity.status(201).body(
+                new SuccessResponse<>(
+                        "New Employee created Successfully!",
+                        emp
+                ));
     }
 
     @DeleteMapping("/delete-employee/{id}")
-    public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable String id) {
-        try {
-            adminService.deleteEmployee(id);
-            return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "Employee deleted Successfully!",
-                            null
-                    ));
-        } catch (Exception e) {
-            return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "Failed to delete employee!",
-                            e.getMessage()
-                    ));
-        }
+    public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable String id) throws Exception {
+        adminService.deleteEmployee(id);
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "Employee deleted Successfully!",
+                        null
+                ));
     }
 
     @PutMapping("/update-role/{id}")
-    public ResponseEntity<ApiResponse> updateEmployee(@RequestBody RoleDto roles, @PathVariable String id) {
-        try {
-            EmployeeDTO emp = adminService.updateRole(roles, id);
-            return ResponseEntity.status(201).body(
-                    new SuccessResponse<>(
-                            "Updated Employee Successfully!",
-                            emp
-                    ));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "Failed to update role!",
-                            e.getMessage()
-                    ));
-        }
+    public ResponseEntity<ApiResponse> updateEmployee(@RequestBody RoleDto roles, @PathVariable String id) throws Exception {
+        EmployeeDTO emp = adminService.updateRole(roles, id);
+        return ResponseEntity.status(201).body(
+                new SuccessResponse<>(
+                        "Updated Employee Successfully!",
+                        emp
+                ));
+
     }
 }

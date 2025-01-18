@@ -27,63 +27,44 @@ public class EmployeeController {
     @PostMapping()
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
     public ResponseEntity<ApiResponse> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        try {
-            EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
-            SuccessResponse<EmployeeDTO> response = new SuccessResponse<>(
-                    "User created successfully",
-                    createdEmployee
-            );
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(
-                    new ErrorResponse("Error creating employee", e.getMessage()));
-        }
+        EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
+        SuccessResponse<EmployeeDTO> response = new SuccessResponse<>(
+                "User created successfully",
+                createdEmployee
+        );
+        return ResponseEntity.ok(response);
+
     }
 
     // GET: Retrieve a specific employee by ID
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getEmployeeById(@PathVariable String id) {
-        try {
-            Employee employee = employeeService.findById(UUID.fromString(id));
-            SuccessResponse<EmployeeDTO> response = new SuccessResponse<>(
-                    "User retrieved successfully",
-                    EmployeeDTO.builder()
-                            .id(employee.getId())
-                            .firstName(employee.getFirstName())
-                            .lastName(employee.getLastName())
-                            .email(employee.getEmail())
-                            .phone(employee.getPhone())
-                            .salary(employee.getSalary())
-                            .joiningDate(employee.getJoiningDate())
-                            .build()
-            );
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(503).body(
-                    new ErrorResponse(
-                            "Internal Server Error",
-                            e.getMessage()
-                    ));
-        }
+        Employee employee = employeeService.findById(UUID.fromString(id));
+        SuccessResponse<EmployeeDTO> response = new SuccessResponse<>(
+                "User retrieved successfully",
+                EmployeeDTO.builder()
+                        .id(employee.getId())
+                        .firstName(employee.getFirstName())
+                        .lastName(employee.getLastName())
+                        .email(employee.getEmail())
+                        .phone(employee.getPhone())
+                        .salary(employee.getSalary())
+                        .joiningDate(employee.getJoiningDate())
+                        .build()
+        );
+        return ResponseEntity.ok(response);
     }
 
     // GET: Retrieve all employees
     @GetMapping
     public ResponseEntity<ApiResponse> getAllEmployees() {
-        try {
-            List<EmployeeDTO> employees = employeeService.getAllEmployees();
-            SuccessResponse<List<EmployeeDTO>> response = new SuccessResponse<>(
-                    "Users retrieved successfully",
-                    employees
-            );
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(503).body(
-                    new ErrorResponse(
-                            "Something went wrong",
-                            e.getMessage()
-                    ));
-        }
+        List<EmployeeDTO> employees = employeeService.getAllEmployees();
+        SuccessResponse<List<EmployeeDTO>> response = new SuccessResponse<>(
+                "Users retrieved successfully",
+                employees
+        );
+        return ResponseEntity.ok(response);
+
     }
 
     // DELETE: Delete employee
@@ -109,21 +90,12 @@ public class EmployeeController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
     public ResponseEntity<ApiResponse> updateEmployee(@PathVariable UUID id, @RequestBody EmployeeDTO employee) {
-        try {
-            EmployeeDTO updatedEmployee = employeeService.updateEmployee(employee, id);
-            return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "Employee Updated Successfully!",
-                            updatedEmployee
-                    ));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(503).body(
-                    new ErrorResponse(
-                            "Error Updating employee!",
-                            e.getMessage()
-                    ));
-        }
+        EmployeeDTO updatedEmployee = employeeService.updateEmployee(employee, id);
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "Employee Updated Successfully!",
+                        updatedEmployee
+                ));
     }
 
     // GET: Profile od current user

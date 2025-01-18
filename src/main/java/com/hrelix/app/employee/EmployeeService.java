@@ -1,5 +1,6 @@
 package com.hrelix.app.employee;
 
+import com.hrelix.app.exceptions.EmployeeNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,8 +31,12 @@ public class EmployeeService {
 
         employee.setRoles(Collections.singletonList(Role.EMPLOYEE));
 
-        Employee savedEmployee = employeeRepository.save(employee);
-        return EmployeeMapper.toDTO(savedEmployee);
+        try {
+            Employee savedEmployee = employeeRepository.save(employee);
+            return EmployeeMapper.toDTO(savedEmployee);
+        } catch (Exception e) {
+            throw new EmployeeNotFoundException(e.getMessage());
+        }
     }
 
     // Retrieve all employees (temporary function)
@@ -43,17 +47,14 @@ public class EmployeeService {
 
     // Retrieve employee by Email
     public Employee findByEmail(String email) throws Exception {
-        Optional<Employee> employee = employeeRepository.getEmployeeByEmail(email);
-        if (employee.isPresent()) {
-            return employee.get();
-        } else {
-            throw new Exception("Employee Not Found!");
-        }
+        return employeeRepository.getEmployeeByEmail(email)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with email " + email + " not found."));
     }
 
     // Retrieve employee by Email
     public Employee findById(UUID id) {
-        return employeeRepository.getEmployeeById(id);
+        return employeeRepository.getEmployeeById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with ID " + id + " not found."));
     }
 
     public boolean deleteEmployee(Employee employee) {
@@ -67,26 +68,23 @@ public class EmployeeService {
     }
 
     public EmployeeDTO updateEmployee(EmployeeDTO employee, UUID id) {
-        Employee emp = employeeRepository.getEmployeeById(id);
-        if (emp == null) {
-            throw new IllegalArgumentException("Employee Not Found!");
-        } else {
-            emp.setFirstName(employee.getFirstName());
-            emp.setLastName(employee.getLastName());
-            emp.setSalary(employee.getSalary());
-            Employee updated = employeeRepository.save(emp);
+        Employee emp = employeeRepository.getEmployeeById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with ID " + id + " not found."));
+        emp.setFirstName(employee.getFirstName());
+        emp.setLastName(employee.getLastName());
+        emp.setSalary(employee.getSalary());
+        Employee updated = employeeRepository.save(emp);
 
-            return EmployeeDTO.builder()
-                    .id(updated.getId())
-                    .firstName(updated.getFirstName())
-                    .lastName(updated.getLastName())
-                    .email(updated.getEmail())
-                    .phone(updated.getPhone())
-                    .salary(updated.getSalary())
-                    .roles(updated.getRoles())
-                    .joiningDate(updated.getJoiningDate())
-                    .build();
-        }
+        return EmployeeDTO.builder()
+                .id(updated.getId())
+                .firstName(updated.getFirstName())
+                .lastName(updated.getLastName())
+                .email(updated.getEmail())
+                .phone(updated.getPhone())
+                .salary(updated.getSalary())
+                .roles(updated.getRoles())
+                .joiningDate(updated.getJoiningDate())
+                .build();
     }
 
     public EmployeeDTO getProfile() {

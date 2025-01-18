@@ -1,11 +1,7 @@
 package com.hrelix.app.admin;
 
-import com.hrelix.app.employee.EmployeeDTO;
-import com.hrelix.app.employee.RoleDto;
-import com.hrelix.app.employee.Employee;
-import com.hrelix.app.employee.EmployeeMapper;
-import com.hrelix.app.employee.Role;
-import com.hrelix.app.employee.EmployeeRepository;
+import com.hrelix.app.employee.*;
+import com.hrelix.app.exceptions.EmployeeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,10 +18,8 @@ public class AdminService {
     private EmployeeRepository employeeRepository;
 
     public void deleteEmployee(String id) throws Exception {
-        Employee employee = employeeRepository.getEmployeeById(UUID.fromString(id));
-        if (employee == null) {
-            throw new Exception("No Employee with this id!");
-        }
+        Employee employee = employeeRepository.getEmployeeById(UUID.fromString(id))
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with ID " + id + " not found."));
         try {
             employeeRepository.delete(employee);
         } catch (Exception e) {
@@ -67,10 +61,8 @@ public class AdminService {
     }
 
     public EmployeeDTO updateRole(RoleDto roleDto, String id) throws Exception {
-        Employee emp = employeeRepository.getEmployeeById(UUID.fromString(id));
-        if (emp == null) {
-            throw new Exception("No Employee with this id!");
-        }
+        Employee emp = employeeRepository.getEmployeeById(UUID.fromString(id))
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with ID " + id + " not found."));
         try {
             emp.setRoles(roleDto.getRoles());
             employeeRepository.save(emp);

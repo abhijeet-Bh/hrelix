@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Open Endpoints", description = "Operations related to healthcheck and login")
@@ -32,24 +35,20 @@ public class AuthController {
             summary = "You can login using test credentials to get accessToken from here!"
     )
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody AuthRequest authRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-            );
-            final Employee userDetails = employeeService.findByEmail(authRequest.getEmail());
-            String accessToken = jwtUtil.generateToken(userDetails);
-            return ResponseEntity.ok(
-                    new SuccessResponse<>(
-                            "LoggedIn Successfully!",
-                            accessToken
-                    ));
-        } catch (Exception e) {
-            return ResponseEntity.status(403).body(
-                    new SuccessResponse<>(
-                            "Failed to Log In!",
-                            e.getMessage()
-                    ));
-        }
+    public ResponseEntity<ApiResponse> login(@RequestBody AuthRequest authRequest) throws Exception {
+        final Employee userDetails = employeeService.findByEmail(authRequest.getEmail());
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
+        );
+        String accessToken = jwtUtil.generateToken(userDetails);
+        Map<String, String> authResponse = new HashMap<>();
+        authResponse.put("accessToken", accessToken);
+        authResponse.put("refreshToken", null);
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "LoggedIn Successfully!",
+                        authResponse
+                ));
+
     }
 }
