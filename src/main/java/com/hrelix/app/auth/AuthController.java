@@ -4,12 +4,10 @@ import com.hrelix.app.configs.JwtUtils;
 import com.hrelix.app.employee.Employee;
 import com.hrelix.app.employee.EmployeeService;
 import com.hrelix.app.utilities.ApiResponse;
-import com.hrelix.app.utilities.ErrorResponse;
 import com.hrelix.app.utilities.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,9 +39,17 @@ public class AuthController {
             );
             final Employee userDetails = employeeService.findByEmail(authRequest.getEmail());
             String accessToken = jwtUtil.generateToken(userDetails);
-            return new ResponseEntity<>(new SuccessResponse<String>(true, 200, accessToken), HttpStatus.OK);
+            return ResponseEntity.ok(
+                    new SuccessResponse<>(
+                            "LoggedIn Successfully!",
+                            accessToken
+                    ));
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(403, e.getMessage()), HttpStatus.BAD_GATEWAY);
+            return ResponseEntity.status(403).body(
+                    new SuccessResponse<>(
+                            "Failed to Log In!",
+                            e.getMessage()
+                    ));
         }
     }
 }

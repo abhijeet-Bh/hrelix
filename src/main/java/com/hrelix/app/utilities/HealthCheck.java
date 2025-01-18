@@ -10,10 +10,10 @@ public class HealthCheck {
     @GetMapping("api/v1/healthz")
     @Tag(name = "Open Endpoints", description = "Operations related to healthcheck and login")
     public ResponseEntity<ApiResponse> healthCheck() {
-        return ResponseEntity.ok(new SuccessResponse<>(
-                true,
-                200,
-                "HRelix is working fine!"
-        ));
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "Request Successful!",
+                        "HRelix is working fine!"
+                ));
     }
 }

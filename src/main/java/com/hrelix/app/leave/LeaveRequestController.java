@@ -3,7 +3,6 @@ package com.hrelix.app.leave;
 import com.hrelix.app.utilities.ApiResponse;
 import com.hrelix.app.utilities.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +25,21 @@ public class LeaveRequestController {
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
     public ResponseEntity<ApiResponse> getAllLeaveRequests() {
         List<LeaveRequestDto> leaves = leaveRequestService.getAllLeaveRequests();
-        return new ResponseEntity<>(new SuccessResponse<>(true, 200, leaves), HttpStatus.OK);
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "Retrieved all leaves successfully!",
+                        leaves
+                ));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse> applyLeave(@RequestBody LeaveRequest leaveRequest) {
         LeaveRequestDto createdLeaveRequest = leaveRequestService.applyLeave(leaveRequest);
-        return new ResponseEntity<>(new SuccessResponse<>(true, 201, createdLeaveRequest), HttpStatus.CREATED);
+        return ResponseEntity.status(201).body(
+                new SuccessResponse<>(
+                        "Successfully applied for new Leave!",
+                        createdLeaveRequest
+                ));
     }
 
     @PutMapping("/{id}/status")
@@ -42,21 +49,37 @@ public class LeaveRequestController {
             @RequestParam LeaveStatus status,
             @RequestParam(required = false) String comments) {
         LeaveRequestDto updatedLeaveRequest = leaveRequestService.updateLeaveStatus(id, status, comments);
-        return new ResponseEntity<>(new SuccessResponse<>(true, 201, updatedLeaveRequest), HttpStatus.CREATED);
+        return ResponseEntity.status(201).body(
+                new SuccessResponse<>(
+                        "Updated leave status Successfully!",
+                        updatedLeaveRequest
+                ));
     }
 
     @GetMapping("/employee/{employeeId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
     public ResponseEntity<ApiResponse> getEmployeeLeaveRequests(@PathVariable UUID employeeId) {
         List<LeaveRequestDto> leaves = leaveRequestService.getEmployeeLeaveRequests(employeeId);
-        return new ResponseEntity<>(new SuccessResponse<>(true, 200, leaves), HttpStatus.OK);
+        return ResponseEntity.ok(
+                new SuccessResponse<>(
+                        "Retried Successfully!",
+                        leaves
+                ));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getLeaveRequestById(@PathVariable UUID id) {
         Optional<LeaveRequestDto> leave = leaveRequestService.getLeaveRequestById(id);
         if (leave.isPresent())
-            return new ResponseEntity<>(new SuccessResponse<>(true, 200, leave), HttpStatus.OK);
-        else return new ResponseEntity<>(new SuccessResponse<>(true, 404, "Leave Not Found!"), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(
+                    new SuccessResponse<>(
+                            "Retried Successfully!",
+                            leave
+                    ));
+        else return ResponseEntity.status(404).body(
+                new SuccessResponse<>(
+                        "Leave with this id not found!",
+                        null
+                ));
     }
 }

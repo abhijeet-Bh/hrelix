@@ -1,5 +1,6 @@
 package com.hrelix.app.utilities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
@@ -7,14 +8,23 @@ import lombok.Getter;
 public abstract class ApiResponse {
 
     @JsonProperty("success")
-    private boolean success;
+    private final boolean success;
 
-    @JsonProperty("status-code")
-    private int statusCode;
+    @JsonProperty("message")
+    private final String message;
 
-    protected ApiResponse(boolean success, int statusCode) {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("data")
+    private final Object data;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("error")
+    private final Object error;
+
+    protected ApiResponse(boolean success, String message, Object data, Object error) {
         this.success = success;
-        this.statusCode = statusCode;
+        this.message = message;
+        this.data = data;
+        this.error = error;
     }
-
 }

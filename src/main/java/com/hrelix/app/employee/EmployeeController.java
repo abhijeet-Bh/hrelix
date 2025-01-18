@@ -5,7 +5,6 @@ import com.hrelix.app.utilities.ApiResponse;
 import com.hrelix.app.utilities.ErrorResponse;
 import com.hrelix.app.utilities.SuccessResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +29,14 @@ public class EmployeeController {
     public ResponseEntity<ApiResponse> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
         try {
             EmployeeDTO createdEmployee = employeeService.createEmployee(employeeDTO);
-            return new ResponseEntity<>(new SuccessResponse<EmployeeDTO>(true, 201, createdEmployee), HttpStatus.CREATED);
+            SuccessResponse<EmployeeDTO> response = new SuccessResponse<>(
+                    "User created successfully",
+                    createdEmployee
+            );
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(403, e.getMessage()), HttpStatus.BAD_GATEWAY);
+            return ResponseEntity.badRequest().body(
+                    new ErrorResponse("Error creating employee", e.getMessage()));
         }
     }
 
@@ -41,9 +45,25 @@ public class EmployeeController {
     public ResponseEntity<ApiResponse> getEmployeeById(@PathVariable String id) {
         try {
             Employee employee = employeeService.findById(UUID.fromString(id));
-            return new ResponseEntity<>(new SuccessResponse<>(true, 200, EmployeeMapper.toDTO(employee)), HttpStatus.OK);
+            SuccessResponse<EmployeeDTO> response = new SuccessResponse<>(
+                    "User retrieved successfully",
+                    EmployeeDTO.builder()
+                            .id(employee.getId())
+                            .firstName(employee.getFirstName())
+                            .lastName(employee.getLastName())
+                            .email(employee.getEmail())
+                            .phone(employee.getPhone())
+                            .salary(employee.getSalary())
+                            .joiningDate(employee.getJoiningDate())
+                            .build()
+            );
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(404, e.getMessage()), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(503).body(
+                    new ErrorResponse(
+                            "Internal Server Error",
+                            e.getMessage()
+                    ));
         }
     }
 
@@ -52,9 +72,17 @@ public class EmployeeController {
     public ResponseEntity<ApiResponse> getAllEmployees() {
         try {
             List<EmployeeDTO> employees = employeeService.getAllEmployees();
-            return new ResponseEntity<>(new SuccessResponse<>(true, 200, employees), HttpStatus.OK);
+            SuccessResponse<List<EmployeeDTO>> response = new SuccessResponse<>(
+                    "Users retrieved successfully",
+                    employees
+            );
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(403, "Something went wrong!"), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(503).body(
+                    new ErrorResponse(
+                            "Something went wrong",
+                            e.getMessage()
+                    ));
         }
     }
 
@@ -64,9 +92,17 @@ public class EmployeeController {
     public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable UUID id) {
         Employee employee = employeeService.findById(id);
         if (employee != null && employeeService.deleteEmployee(employee)) {
-            return new ResponseEntity<>(new SuccessResponse<>(true, 200, "Employee Deleted"), HttpStatus.OK);
+            return ResponseEntity.ok(
+                    new SuccessResponse<>(
+                            "Employee Deleted Successfully!",
+                            employee
+                    ));
         } else
-            return new ResponseEntity<>(new ErrorResponse(404, "Employee Not Found!"), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(404).body(
+                    new ErrorResponse(
+                            "Employee Not Found!",
+                            null
+                    ));
     }
 
     // PUT : update Employee Details
@@ -75,10 +111,18 @@ public class EmployeeController {
     public ResponseEntity<ApiResponse> updateEmployee(@PathVariable UUID id, @RequestBody EmployeeDTO employee) {
         try {
             EmployeeDTO updatedEmployee = employeeService.updateEmployee(employee, id);
-            return new ResponseEntity<>(new SuccessResponse<>(true, 200, updatedEmployee), HttpStatus.OK);
+            return ResponseEntity.ok(
+                    new SuccessResponse<>(
+                            "Employee Updated Successfully!",
+                            updatedEmployee
+                    ));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return new ResponseEntity<>(new ErrorResponse(503, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(503).body(
+                    new ErrorResponse(
+                            "Error Updating employee!",
+                            e.getMessage()
+                    ));
         }
     }
 
@@ -86,7 +130,7 @@ public class EmployeeController {
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse> getProfile() {
         EmployeeDTO profile = employeeService.getProfile();
-        return new ResponseEntity<>(new SuccessResponse<>(true, 200, profile), HttpStatus.OK);
+        return ResponseEntity.ok(new SuccessResponse<>("Retrieved user successfully!", profile));
     }
 
 }

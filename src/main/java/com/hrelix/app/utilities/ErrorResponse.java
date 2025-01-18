@@ -1,6 +1,5 @@
 package com.hrelix.app.utilities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,12 +7,7 @@ import lombok.Setter;
 @Getter
 public class ErrorResponse extends ApiResponse {
 
-    @JsonProperty("data")
-    private String message;
-
-    public ErrorResponse(int statusCode, String message) {
-        super(false, statusCode); // Call to the parent constructor
-        this.message = message;
+    public ErrorResponse(String message, Object errorDetails) {
+        super(false, message, null, errorDetails);
     }
-
 }
