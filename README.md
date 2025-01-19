@@ -109,8 +109,9 @@ You can run the application using `Maven` or `Maven-Wrapper`.
    ./mvnw spring-boot:run -Dspring-boot.run.profiles=prod 
    ```
 
-   The application will start on `http://localhost:8080`.
+The application will start on `http://localhost:8080`.
 
+![Banner](docs/assets/home-screen.png)
 ---
 
 ## API Documentation
