@@ -1,5 +1,6 @@
 package com.hrelix.app.leave;
 
+import com.hrelix.app.payroll.EmailDataDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class MailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendEmail(LeaveRequest leave) {
+    public void sendLeaveEmail(LeaveRequest leave) {
         try {
             // Create a MimeMessage
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -26,7 +27,9 @@ public class MailService {
 
             // Set email details
             helper.setFrom("blufindesign@gmail.com");
-//            helper.setTo(leave.getEmployee().getEmail());
+
+            // TODO: original email later.
+            // helper.setTo(leave.getEmployee().getEmail());
             helper.setTo("abhijeetbhardwaj53@gmail.com");
             helper.setSubject("New Leave Request Notification");
 
@@ -54,6 +57,59 @@ public class MailService {
                         .replace("{{startDate}}", leave.getStartDate().toString())
                         .replace("{{endDate}}", leave.getEndDate().toString())
                         .replace("{{comments}}", leave.getComments() == null ? "N/A" : leave.getComments());
+
+                // Set the email content
+                helper.setText(emailContent, true);
+            } catch (IOException e) {
+                throw new FileNotFoundException("Unable to load email template: " + e.getMessage());
+            }
+
+            // Send the email
+            javaMailSender.send(message);
+        } catch (MessagingException | IOException e) {
+            throw new RuntimeException("Failed to send email: " + e.getMessage());
+        }
+    }
+
+    public void sendPayrollEmail(EmailDataDto emailData) {
+        try {
+            // Create a MimeMessage
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            // Set email details
+            helper.setFrom("blufindesign@gmail.com");
+
+            // TODO: original email later.
+            // helper.setTo(leave.getEmployee().getEmail());
+            helper.setTo("abhijeetbhardwaj53@gmail.com");
+            helper.setSubject("Your Salary Credit Notification");
+
+            // Load email template
+            try (InputStream inputStream = Objects.requireNonNull(
+                    LeaveRequestController.class.getResourceAsStream("/templates/payslip.html"),
+                    "Email template not found!")) {
+
+                String emailContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+
+
+                // Replace placeholders with actual values
+                emailContent = emailContent
+                        .replace("{{month}}", emailData.getMonth())
+                        .replace("{{year}}", emailData.getYear())
+                        .replace("{{employee_name}}", emailData.getEmpName())
+                        .replace("{{base_salary}}", emailData.getBaseSalary())
+                        .replace("{{allowances}}", emailData.getAllowances())
+                        .replace("{{bonuses}}", emailData.getBonuses())
+                        .replace("{{gross_salary}}", emailData.getGrossSalary())
+                        .replace("{{tax_deductions}}", emailData.getTaxDeductions())
+                        .replace("{{other_deductions}}", emailData.getOtherDeductions())
+                        .replace("{{net_salary}}", emailData.getNetSalary())
+                        .replace("{{account_number}}", emailData.getAccountNumber())
+                        .replace("{{IFSC_code}}", emailData.getIFSCCode())
+                        .replace("{{transaction_iD}}", emailData.getTransactionID())
+                        .replace("{{credit_date_time}}", emailData.getCreditDateTime())
+                        .replace("{{bank_name}}", emailData.getBankName());
 
                 // Set the email content
                 helper.setText(emailContent, true);

@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    // Handle LoginException
+    // Handle CTC Not found
     @ExceptionHandler(EmployeeCtcNotFound.class)
     public ResponseEntity<ApiResponse> handleCTCNotFoundException(EmployeeCtcNotFound ex) {
         Map<String, Object> errorDetails = new HashMap<>();
@@ -81,6 +81,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body(
                 new ErrorResponse(
                         "Employee CTC not defined correctly, No CTC definition found!",
+                        errorDetails
+                ));
+    }
+
+    // Handle Payroll Not found
+    @ExceptionHandler(PayrollNotFound.class)
+    public ResponseEntity<ApiResponse> handlePayrollNotFoundException(PayrollNotFound ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(404).body(
+                new ErrorResponse(
+                        "No Payroll definition found!",
                         errorDetails
                 ));
     }

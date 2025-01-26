@@ -45,7 +45,7 @@ public class LeaveRequestService {
             Employee employee = (Employee) authentication.getPrincipal();
             leaveRequest.setEmployee(employee);
             LeaveRequest leave = leaveRequestRepository.save(leaveRequest);
-            mailService.sendEmail(leave);
+            mailService.sendLeaveEmail(leave);
 
             return LeaveRequestDto.builder()
                     .id(leave.getId())
@@ -72,7 +72,7 @@ public class LeaveRequestService {
         leaveRequest.setComments(comments);
         try {
             LeaveRequest updatedLeave = leaveRequestRepository.save(leaveRequest);
-            mailService.sendEmail(leaveRequest);
+            mailService.sendLeaveEmail(leaveRequest);
 
             return LeaveRequestDto.builder()
                     .id(updatedLeave.getId())

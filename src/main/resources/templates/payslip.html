@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <style>
+        body {
+          font-family: "Arial", sans-serif;
+          background-color: #f4f4f9;
+          margin: 0;
+          padding: 0;
+          color: #333;
+        }
+
+        .email-container {
+          max-width: 650px;
+          margin: 30px auto;
+          background-color: #ffffff;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+          border: 1px solid #eaeaea;
+        }
+
+        .header {
+          background: linear-gradient(90deg, #4caf50, #67db67);
+          color: #ffffff;
+          text-align: center;
+          padding: 20px 15px;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+        }
+
+        .header h1 {
+          margin: 0;
+          font-size: 24px;
+          letter-spacing: 0.5px;
+        }
+
+        .content {
+          padding: 25px 20px;
+        }
+
+        .content h2 {
+          font-size: 20px;
+          color: #4caf50;
+          margin: 0 0 10px 0;
+        }
+
+        .content p {
+          line-height: 1.6;
+          margin: 10px 0;
+        }
+
+        .summary-section {
+          margin: 20px 0;
+          padding: 15px;
+          border-radius: 8px;
+          background-color: #f9fdf9;
+          border: 1px solid #d4e6d4;
+        }
+
+        .summary-section table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .summary-section table th {
+          background-color: #e8f5e9;
+          color: #4caf50;
+          font-weight: bold;
+          font-size: 14px;
+          text-align: left;
+          padding: 12px 10px;
+        }
+
+        .summary-section table td {
+          font-size: 14px;
+          color: #555555;
+          text-align: left;
+          padding: 12px 10px;
+        }
+
+        .summary-section table tr:last-child td {
+          border-bottom: none;
+        }
+
+        .summary-section table tr td:first-child {
+          color: #4caf50;
+          font-weight: bold;
+          font-size: 14px;
+          text-align: left;
+          padding: 12px 10px;
+        }
+
+        /* Red for deductions and green for additions */
+        .deduction {
+          color: red;
+          font-weight: bold;
+          font-style: italic;
+        }
+
+        .addition {
+          color: green;
+          font-weight: bold;
+          font-style: italic;
+        }
+
+        .pay-section table tr:last-child td:first-child {
+          background-color: #e8f5e9;
+          color: #4caf50;
+          font-weight: bold;
+          font-size: 14px;
+          text-align: left;
+          padding: 12px 10px;
+        }
+
+        .pay-section table tr:last-child td:last-child {
+          background-color: #e8f5e9;
+          color: #4caf50;
+          font-weight: bold;
+          font-size: 14px;
+          text-align: left;
+          padding: 12px 10px;
+        }
+
+        .footer {
+          background-color: #f9f9f9;
+          text-align: center;
+          padding: 15px;
+          font-size: 12px;
+          color: #777777;
+        }
+
+        .footer a {
+          color: #4caf50;
+          text-decoration: none;
+        }
+
+        .button {
+          display: inline-block;
+          margin-top: 20px;
+          padding: 10px 20px;
+          background-color: #4caf50;
+          color: #ffffff;
+          text-decoration: none;
+          border-radius: 5px;
+          font-size: 14px;
+        }
+
+        .button:hover {
+          background-color: #43a048;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Payslip for {{month}}, {{year}}</h1>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+        <h2>Hello {{employee_name}},</h2>
+        <p>
+            We are pleased to share your payslip for the month of
+            <strong>{{month}}, {{year}}</strong>. Below is a summary of your
+            salary details:
+        </p>
+
+        <!-- Payslip Summary Section -->
+        <div class="summary-section pay-section">
+            <table>
+                <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Amount (₹)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Basic Salary</td>
+                    <td><span class="addition">₹ {{base_salary}}</span></td>
+                </tr>
+                <tr>
+                    <td>Allowances</td>
+                    <td><span class="addition">₹ {{allowances}}</span></td>
+                </tr>
+                <tr>
+                    <td>Bonuses</td>
+                    <td><span class="addition">₹ {{bonuses}}</span></td>
+                </tr>
+                <tr>
+                    <td>Gross Salary</td>
+                    <td><span class="addition">₹ {{gross_salary}}</span></td>
+                </tr>
+                <tr>
+                    <td>Tax Deductions</td>
+                    <td><span class="deduction">₹ {{tax_deductions}}</span></td>
+                </tr>
+                <tr>
+                    <td>Other Deductions</td>
+                    <td><span class="deduction">₹ {{other_deductions}}</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Net Salary</strong></td>
+                    <td>
+                        <strong
+                        ><span class="addition">₹ {{net_salary}}</span></strong
+                        >
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bank Details Table -->
+        <p><strong>Bank Details:</strong></p>
+        <div class="summary-section">
+            <table>
+                <thead>
+                <tr>
+                    <th>Detail</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Bank Name</td>
+                    <td>{{bank_name}}</td>
+                </tr>
+                <tr>
+                    <td>Account Number</td>
+                    <td>{{account_number}}</td>
+                </tr>
+                <tr>
+                    <td>IFSC Code</td>
+                    <td>{{IFSC_code}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Transaction Details Table -->
+        <p><strong>Transaction Details:</strong></p>
+        <div class="summary-section">
+            <table>
+                <thead>
+                <tr>
+                    <th>Detail</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Transaction ID</td>
+                    <td>{{transaction_iD}}</td>
+                </tr>
+                <tr>
+                    <td>Credit Date & Time</td>
+                    <td>{{credit_date_time}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            You can find the detailed payslip attached to this email or access it
+            on the employee portal.
+        </p>
+        <a class="button" href="[Employee Portal URL]">View in Portal</a>
+        <p>
+            If you have any questions, feel free to reach out to us at
+            <a href="mailto:hr@hrelix.co.in">hr@hrelix.co.in</a>.
+        </p>
+
+        <p>Thank you for your dedication and contribution to HRelix Inc.!</p>
+        <p>Best regards,</p>
+        <p><strong>HRelix Inc. HR Team</strong></p>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+        <p>&copy; 2025 HRelix Inc. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>
