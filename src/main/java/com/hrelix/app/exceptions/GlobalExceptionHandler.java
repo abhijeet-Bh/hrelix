@@ -57,6 +57,34 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    // Handle Deduction Exception
+    @ExceptionHandler(DeductionNotFound.class)
+    public ResponseEntity<ApiResponse> handleDeductionNotFoundException(DeductionNotFound ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(404).body(
+                new ErrorResponse(
+                        "Employee CTC not defined correctly, No deduction definition found!",
+                        errorDetails
+                ));
+    }
+
+    // Handle LoginException
+    @ExceptionHandler(EmployeeCtcNotFound.class)
+    public ResponseEntity<ApiResponse> handleCTCNotFoundException(EmployeeCtcNotFound ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(404).body(
+                new ErrorResponse(
+                        "Employee CTC not defined correctly, No CTC definition found!",
+                        errorDetails
+                ));
+    }
+
     // Handle other RuntimeExceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleRuntimeException(Exception ex) {

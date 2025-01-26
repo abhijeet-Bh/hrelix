@@ -6,10 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/payroll")
@@ -21,6 +20,9 @@ public class PayrollController {
 
     @Autowired
     private DeductionService deductionService;
+
+    @Autowired
+    private PayrollService payrollService;
 
     @PostMapping("/generate-ctc")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
@@ -44,4 +46,34 @@ public class PayrollController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
+    public ResponseEntity<ApiResponse> createNewPayroll(@RequestBody Payroll payroll) {
+        Payroll createdPayroll = payrollService.createDeduction(payroll);
+        SuccessResponse<Payroll> response = new SuccessResponse<>(
+                "New Payroll created successfully",
+                createdPayroll
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> getAllPayroll() {
+        List<Payroll> allPayrolls = payrollService.getAllPayrolls();
+        SuccessResponse<List<Payroll>> response = new SuccessResponse<>(
+                "All Payrolls Retrieved successfully",
+                allPayrolls
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<ApiResponse> getPayrollsByStatus(@RequestParam PaymentStatus query) {
+        List<Payroll> allPayrolls = payrollService.getPayrollsByStatus(query);
+        SuccessResponse<List<Payroll>> response = new SuccessResponse<>(
+                "Payrolls by status Retrieved successfully",
+                allPayrolls
+        );
+        return ResponseEntity.ok(response);
+    }
 }
