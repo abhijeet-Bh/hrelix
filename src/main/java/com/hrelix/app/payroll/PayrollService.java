@@ -2,10 +2,7 @@ package com.hrelix.app.payroll;
 
 import com.hrelix.app.employee.Employee;
 import com.hrelix.app.employee.EmployeeRepository;
-import com.hrelix.app.exceptions.DeductionNotFound;
-import com.hrelix.app.exceptions.EmployeeCtcNotFound;
-import com.hrelix.app.exceptions.EmployeeNotFoundException;
-import com.hrelix.app.exceptions.PayrollNotFound;
+import com.hrelix.app.exceptions.*;
 import com.hrelix.app.leave.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,24 +31,22 @@ public class PayrollService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private BankAccountDetailRepo bankAccountDetailRepo;
+
     public Payroll createDeduction(Payroll payroll) {
-        Optional<Employee> employee = employeeRepository.getEmployeeById(payroll.getEmployee());
-        if (employee.isEmpty())
-            throw new EmployeeNotFoundException(
-                    "Employee with id: " + payroll.getEmployee() + " Not Found!");
+        Optional<Payroll> existingPayroll = payrollRepo.findByMonthYearAndEmployee(payroll.getMonthYear(), payroll.getEmployee());
+        if (existingPayroll.isPresent())
+            throw new RuntimeException("Payroll already exists!");
 
-        Optional<Deductions> deductions = deductionsRepo.getDeductionByEmployee(payroll.getEmployee());
-        if (deductions.isEmpty())
-            throw new DeductionNotFound(
-                    "Deduction for employee id: " + payroll.getEmployee() + " Not Found!");
+        EmployeeCTC employeeCTC = ctcRepository.getCtcByEmployee(payroll.getEmployee())
+                .orElseThrow(() -> new EmployeeCtcNotFound("CTC for employee id: " + payroll.getEmployee() + " Not Found!"));
 
-        Optional<EmployeeCTC> employeeCTC = ctcRepository.getCtcByEmployee(payroll.getEmployee());
-        if (employeeCTC.isEmpty())
-            throw new EmployeeCtcNotFound(
-                    "CTC for employee id: " + payroll.getEmployee() + " Not Found!");
+        Deductions deductions = deductionsRepo.getDeductionByEmployee(payroll.getEmployee())
+                .orElseThrow(() -> new DeductionNotFound("Deduction for employee id: " + payroll.getEmployee() + " Not Found!"));
 
-        payroll.setNetCTC(employeeCTC.get().getMonthlyNetCTC());
-        payroll.setNetDeductions(deductions.get().getTotalDeduction());
+        payroll.setNetCTC(employeeCTC.getMonthlyNetCTC());
+        payroll.setNetDeductions(deductions.getTotalDeduction());
         payroll.setNetPayout(payroll.getNetCTC() - payroll.getNetDeductions());
         payroll.setStatus(PaymentStatus.PENDING);
 
@@ -81,25 +76,36 @@ public class PayrollService {
 
     // process payment
 
-    public Payroll processPayment(UUID payrollId) {
-        Optional<Payroll> payroll = payrollRepo.findById(payrollId);
-        if (payroll.isEmpty())
-            throw new PayrollNotFound("Payroll with id: " + payrollId + " not found!");
+    public Payroll processPayment(UUID payrollId, String testEmail, String txnNum) {
+        Payroll payroll = payrollRepo.findById(payrollId)
+                .orElseThrow(() -> new PayrollNotFound("Payroll with id: " + payrollId + " not found!"));
 
-        Employee employee = employeeRepository.getEmployeeById(payroll.get().getEmployee()).get();
-        EmployeeCTC employeeCTC = ctcRepository.getCtcByEmployee(payroll.get().getEmployee()).get();
-        Deductions deductions = deductionsRepo.getDeductionByEmployee(payroll.get().getEmployee()).get();
+        if (payroll.getStatus() == PaymentStatus.PAID)
+            throw new RuntimeException("Payment already processed!");
 
-        Payroll payrollPaid = payroll.get();
-        payrollPaid.setStatus(PaymentStatus.PAID);
-        payrollPaid.setDate(LocalDate.now());
+        Employee employee = employeeRepository.getEmployeeById(payroll.getEmployee())
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee with id: " + payroll.getEmployee() + " Not Found!"));
+
+        EmployeeCTC employeeCTC = ctcRepository.getCtcByEmployee(payroll.getEmployee())
+                .orElseThrow(() -> new EmployeeCtcNotFound("CTC for employee id: " + payroll.getEmployee() + " Not Found!"));
+
+        Deductions deductions = deductionsRepo.getDeductionByEmployee(payroll.getEmployee())
+                .orElseThrow(() -> new DeductionNotFound("Deduction for employee id: " + payroll.getEmployee() + " Not Found!"));
+
+        BankAccountDetail bankAccountDetail = bankAccountDetailRepo.findByEmployeeId(payroll.getEmployee())
+                .orElseThrow(() -> new BankAccountNotFoundException("Bank for user id: " + payroll.getEmployee() + " Not Found!"));
+
+        payroll.setStatus(PaymentStatus.PAID);
+        payroll.setDate(LocalDate.now());
+        if (!testEmail.isEmpty())
+            payroll.setTestEmail(testEmail);
 
         try {
-            Payroll savedPayroll = payrollRepo.save(payrollPaid);
+            Payroll savedPayroll = payrollRepo.save(payroll);
             mailService.sendPayrollEmail(
                     EmailDataDto.builder()
-                            .month(payrollPaid.getMonthYear().split("-")[0])
-                            .year(payrollPaid.getMonthYear().split("-")[1])
+                            .month(payroll.getMonthYear().split("-")[0])
+                            .year(payroll.getMonthYear().split("-")[1])
                             .empName(employee.getFirstName() + " " + employee.getLastName())
                             .baseSalary(String.valueOf(employeeCTC.getBasicPay()))
                             .allowances(
@@ -112,12 +118,13 @@ public class PayrollService {
                             .taxDeductions(String.valueOf(deductions.getTds() + deductions.getProfessionalTax()))
                             .otherDeductions(String.valueOf(deductions.getOtherDeductions()))
                             .netSalary(String.valueOf(savedPayroll.getNetPayout()))
-                            .bankName("Bank Of India")
-                            .accountNumber("18XXX89XX891")
-                            .IFSCCode("BXXIFSC00735")
-                            .transactionID("TXNHRELIX00912")
+                            .bankName(bankAccountDetail.getBankName())
+                            .accountNumber(bankAccountDetail.getBankAccountNumber())
+                            .IFSCCode(bankAccountDetail.getIfscCode())
+                            .transactionID(txnNum)
                             .creditDateTime(String.valueOf(LocalDate.now()))
-                            .build()
+                            .build(),
+                    testEmail
             );
 
             return savedPayroll;

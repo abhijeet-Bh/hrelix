@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +25,9 @@ public class PayrollController {
 
     @Autowired
     private PayrollService payrollService;
+
+    @Autowired
+    private BankAccountDetailService bankAccountDetailService;
 
     @PostMapping("/generate-ctc")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
@@ -43,6 +47,17 @@ public class PayrollController {
         SuccessResponse<Deductions> response = new SuccessResponse<>(
                 "Employee Deduction created successfully",
                 createdEmployeeDeduction
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/set-bank-details")
+    @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
+    public ResponseEntity<ApiResponse> createEmployeeBankDetails(@RequestBody BankAccountDetail accountDetail) {
+        BankAccountDetail createdAccount = bankAccountDetailService.createBankDetails(accountDetail);
+        SuccessResponse<BankAccountDetail> response = new SuccessResponse<>(
+                "Employee Bank Details saved successfully",
+                createdAccount
         );
         return ResponseEntity.ok(response);
     }
@@ -103,8 +118,16 @@ public class PayrollController {
 
     @PutMapping("/pay/{payrollId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
-    public ResponseEntity<ApiResponse> processPayment(@PathVariable UUID payrollId) {
-        Payroll payroll = payrollService.processPayment(payrollId);
+    public ResponseEntity<ApiResponse> processPayment(
+            @PathVariable UUID payrollId,
+            @RequestBody Map<String, Object> payload
+    ) {
+        String testEmail = (String) payload.get("testEmail");
+        String txnNum = (String) payload.get("txnNum");
+        if (txnNum == null)
+            throw new RuntimeException("Transaction number is compulsory");
+
+        Payroll payroll = payrollService.processPayment(payrollId, testEmail, txnNum);
         SuccessResponse<Payroll> response = new SuccessResponse<>(
                 "Payrolls processed successfully!",
                 payroll

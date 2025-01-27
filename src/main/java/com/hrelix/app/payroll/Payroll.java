@@ -27,6 +27,9 @@ public class Payroll {
     private double netDeductions;
     private double netPayout;
 
+    // test email for testing purpose
+    private String testEmail;
+
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
     private LocalDate date;

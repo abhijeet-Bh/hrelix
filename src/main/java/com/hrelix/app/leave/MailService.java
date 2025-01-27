@@ -71,7 +71,7 @@ public class MailService {
         }
     }
 
-    public void sendPayrollEmail(EmailDataDto emailData) {
+    public void sendPayrollEmail(EmailDataDto emailData, String testEmail) {
         try {
             // Create a MimeMessage
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -83,6 +83,8 @@ public class MailService {
             // TODO: original email later.
             // helper.setTo(leave.getEmployee().getEmail());
             helper.setTo("abhijeetbhardwaj53@gmail.com");
+            if (testEmail != null)
+                helper.setCc(testEmail);
             helper.setSubject("Your Salary Credit Notification");
 
             // Load email template

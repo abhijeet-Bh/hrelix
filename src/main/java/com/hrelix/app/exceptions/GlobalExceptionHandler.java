@@ -99,6 +99,20 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    // Handle Bank Details Not found
+    @ExceptionHandler(BankAccountNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleBankDetailsNotFoundException(BankAccountNotFoundException ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("message", ex.getMessage());
+        errorDetails.put("status", HttpStatus.NOT_FOUND.value());
+        return ResponseEntity.status(404).body(
+                new ErrorResponse(
+                        "Bank detail not defined!",
+                        errorDetails
+                ));
+    }
+
     // Handle other RuntimeExceptions
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleRuntimeException(Exception ex) {
