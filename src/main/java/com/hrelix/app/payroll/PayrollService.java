@@ -81,7 +81,7 @@ public class PayrollService {
                 .orElseThrow(() -> new PayrollNotFound("Payroll with id: " + payrollId + " not found!"));
 
         if (payroll.getStatus() == PaymentStatus.PAID)
-            throw new RuntimeException("Payment already processed!");
+            throw new RuntimeException("Payment already processed on " + payroll.getDate());
 
         Employee employee = employeeRepository.getEmployeeById(payroll.getEmployee())
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee with id: " + payroll.getEmployee() + " Not Found!"));
