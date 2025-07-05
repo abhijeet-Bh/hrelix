@@ -11,16 +11,25 @@ import java.util.UUID;
 
 @Repository
 public interface PayrollRepo extends JpaRepository<Payroll, UUID> {
-    // Query for dynamic filtering
+
     @Query("SELECT p FROM Payroll p WHERE " +
             "(:status IS NULL OR p.status = :status) AND " +
-            "(:monthYear IS NULL OR p.monthYear = :monthYear)")
+            "(:month IS NULL OR EXTRACT(MONTH FROM p.payrollMonth) = :month) AND " +
+            "(:year IS NULL OR EXTRACT(YEAR FROM p.payrollMonth) = :year)")
     List<Payroll> findByStatusAndMonthYear(
             @Param("status") PaymentStatus status,
-            @Param("monthYear") String monthYear
+            @Param("month") Integer month,
+            @Param("year") Integer year
     );
 
-    List<Payroll> findByEmployee(UUID employee);
+    // ✅ FIX: Custom query required when employee is a UUID (not an Entity)
+    @Query("SELECT p FROM Payroll p WHERE p.employee = :employeeId")
+    List<Payroll> findByEmployee(@Param("employeeId") UUID employeeId);
 
-    Optional<Payroll> findByMonthYearAndEmployee(String monthYear, UUID employee);
+    @Query("SELECT p FROM Payroll p WHERE EXTRACT(MONTH FROM p.payrollMonth) = :month AND EXTRACT(YEAR FROM p.payrollMonth) = :year AND p.employee = :employeeId")
+    Optional<Payroll> findByPayrollMonthAndEmployee(
+            @Param("month") int month,
+            @Param("year") int year,
+            @Param("employeeId") UUID employeeId
+    );
 }

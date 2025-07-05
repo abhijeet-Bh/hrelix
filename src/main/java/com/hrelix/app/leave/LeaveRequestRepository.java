@@ -14,4 +14,6 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, UUID
     List<LeaveRequest> findByStatus(LeaveStatus status);
 
     List<LeaveRequest> findByLeaveType(LeaveType leaveType);
+
+    List<LeaveRequest> findTop10ByOrderByCreatedAtDesc();
 }

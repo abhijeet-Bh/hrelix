@@ -39,6 +39,23 @@ public class LeaveRequestService {
                 .toList();
     }
 
+    public List<LeaveRequestDto> get10LatestLaves() {
+        List<LeaveRequest> leaves = leaveRequestRepository.findTop10ByOrderByCreatedAtDesc();
+        return leaves.stream()
+                .map(leave -> LeaveRequestDto.builder()
+                        .id(leave.getId())
+                        .employeeId(leave.getEmployee().getId())
+                        .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
+                        .leaveType(leave.getLeaveType())
+                        .startDate(leave.getStartDate())
+                        .endDate(leave.getEndDate())
+                        .status(leave.getStatus())
+                        .reason(leave.getReason())
+                        .comments(leave.getComments())
+                        .build())
+                .toList();
+    }
+
     public LeaveRequestDto applyLeave(LeaveRequest leaveRequest) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -126,5 +143,22 @@ public class LeaveRequestService {
         } else {
             throw new LeaveNotFoundException("Leave with id: " + id + " Not Found!");
         }
+    }
+
+    public List<LeaveRequestDto> getPendingLeaveRequests() {
+        List<LeaveRequest> leaves = leaveRequestRepository.findByStatus(LeaveStatus.PENDING);
+        return leaves.stream()
+                .map(leave -> LeaveRequestDto.builder()
+                        .id(leave.getId())
+                        .employeeId(leave.getEmployee().getId())
+                        .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
+                        .leaveType(leave.getLeaveType())
+                        .startDate(leave.getStartDate())
+                        .endDate(leave.getEndDate())
+                        .status(leave.getStatus())
+                        .reason(leave.getReason())
+                        .comments(leave.getComments())
+                        .build())
+                .toList();
     }
 }

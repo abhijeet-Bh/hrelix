@@ -35,7 +35,11 @@ public class PayrollService {
     private BankAccountDetailRepo bankAccountDetailRepo;
 
     public Payroll createDeduction(Payroll payroll) {
-        Optional<Payroll> existingPayroll = payrollRepo.findByMonthYearAndEmployee(payroll.getMonthYear(), payroll.getEmployee());
+        Optional<Payroll> existingPayroll = payrollRepo.findByPayrollMonthAndEmployee(
+                payroll.getPayrollMonth().getMonthValue(),
+                payroll.getPayrollMonth().getYear(),
+                payroll.getEmployee()
+        );
         if (existingPayroll.isPresent())
             throw new RuntimeException("Payroll already exists!");
 
@@ -57,8 +61,8 @@ public class PayrollService {
         return payrollRepo.findAll();
     }
 
-    public List<Payroll> getPayrollsByStatus(PaymentStatus status, String monthYear) {
-        return payrollRepo.findByStatusAndMonthYear(status, monthYear);
+    public List<Payroll> getPayrollsByStatus(PaymentStatus status, int month, int year) {
+        return payrollRepo.findByStatusAndMonthYear(status, month, year);
     }
 
     public Payroll getPayrollById(UUID payrollId) {
@@ -104,8 +108,8 @@ public class PayrollService {
             Payroll savedPayroll = payrollRepo.save(payroll);
             mailService.sendPayrollEmail(
                     EmailDataDto.builder()
-                            .month(payroll.getMonthYear().split("-")[0])
-                            .year(payroll.getMonthYear().split("-")[1])
+                            .month(String.valueOf(payroll.getPayrollMonth().getMonthValue()))
+                            .year(String.valueOf(payroll.getPayrollMonth().getYear()))
                             .empName(employee.getFirstName() + " " + employee.getLastName())
                             .baseSalary(String.valueOf(employeeCTC.getBasicPay()))
                             .allowances(
@@ -132,4 +136,5 @@ public class PayrollService {
             throw new RuntimeException("Failed to process the payroll!");
         }
     }
+
 }

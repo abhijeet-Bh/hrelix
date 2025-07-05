@@ -14,23 +14,30 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Payroll {
+
     @Id
     @GeneratedValue
     private UUID payrollId;
 
     @NotNull(message = "Employee Id is Needed to create payroll")
     private UUID employee;
-    @Column(nullable = false)
-    private String monthYear;
+
+    @Column(name = "payroll_month", nullable = false)
+    private LocalDate payrollMonth;
 
     private double netCTC;
     private double netDeductions;
     private double netPayout;
 
-    // test email for testing purpose
     private String testEmail;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
+
     private LocalDate date;
+
+    @PrePersist
+    public void prePersist() {
+        this.date = LocalDate.now();
+    }
 }

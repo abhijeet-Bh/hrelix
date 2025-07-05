@@ -77,7 +77,7 @@ public class PayrollController {
     public ResponseEntity<ApiResponse> getAllPayroll() {
         List<Payroll> allPayrolls = payrollService.getAllPayrolls();
         SuccessResponse<List<Payroll>> response = new SuccessResponse<>(
-                "All Payrolls Retrieved successfully",
+                "All Payrolls retrieved successfully",
                 allPayrolls
         );
         return ResponseEntity.ok(response);
@@ -86,21 +86,22 @@ public class PayrollController {
     @GetMapping("/status")
     public ResponseEntity<ApiResponse> getPayrollsByStatus(
             @RequestParam(required = false) PaymentStatus query,
-            @RequestParam(required = false) String monthYear
+            @RequestParam(required = false) Integer month,
+            @RequestParam(required = false) Integer year
     ) {
-        List<Payroll> allPayrolls = payrollService.getPayrollsByStatus(query, monthYear);
+        List<Payroll> allPayrolls = payrollService.getPayrollsByStatus(query, month, year);
         SuccessResponse<List<Payroll>> response = new SuccessResponse<>(
-                "Payrolls by status Retrieved successfully",
+                "Payrolls by status retrieved successfully",
                 allPayrolls
         );
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{payrollId}")
-    public ResponseEntity<ApiResponse> getPayrollsById(@PathVariable UUID payrollId) {
+    public ResponseEntity<ApiResponse> getPayrollById(@PathVariable UUID payrollId) {
         Payroll payroll = payrollService.getPayrollById(payrollId);
         SuccessResponse<Payroll> response = new SuccessResponse<>(
-                "Payrolls by status Retrieved successfully",
+                "Payroll by ID retrieved successfully",
                 payroll
         );
         return ResponseEntity.ok(response);
@@ -110,7 +111,7 @@ public class PayrollController {
     public ResponseEntity<ApiResponse> getPayrollsByEmployeeId(@PathVariable UUID employeeId) {
         List<Payroll> payroll = payrollService.getPayrollByEmployeeId(employeeId);
         SuccessResponse<List<Payroll>> response = new SuccessResponse<>(
-                "Payrolls by status Retrieved successfully",
+                "Payrolls by employee retrieved successfully",
                 payroll
         );
         return ResponseEntity.ok(response);
