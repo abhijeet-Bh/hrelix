@@ -18,4 +18,5 @@ public class HomeDto {
     private double payrollProcessed;
     private double payrollPending;
     private double payrollBlocked;
+    private int employeesOnLeave;
 }

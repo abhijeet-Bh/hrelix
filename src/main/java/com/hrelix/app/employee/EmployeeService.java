@@ -113,4 +113,9 @@ public class EmployeeService {
             return null;
         }
     }
+
+    public List<Employee> getNewEmployees() {
+        LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
+        return employeeRepository.findByJoiningDateAfter(thirtyDaysAgo);
+    }
 }

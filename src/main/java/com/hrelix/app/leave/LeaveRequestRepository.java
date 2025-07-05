@@ -3,6 +3,7 @@ package com.hrelix.app.leave;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,4 +17,10 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, UUID
     List<LeaveRequest> findByLeaveType(LeaveType leaveType);
 
     List<LeaveRequest> findTop10ByOrderByCreatedAtDesc();
+
+    List<LeaveRequest> findByStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+            LeaveStatus status,
+            LocalDate leftLimit,
+            LocalDate rightLimit
+    );
 }

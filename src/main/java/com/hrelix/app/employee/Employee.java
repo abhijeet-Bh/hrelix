@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Entity
 @Table(name = "employees", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email"), // Ensures that email is unique
-        @UniqueConstraint(columnNames = "phone")  // Ensures that phone is unique
+        @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "phone")
 })
 public class Employee implements UserDetails {
 
@@ -30,16 +30,16 @@ public class Employee implements UserDetails {
     @GeneratedValue
     private UUID id;
 
-    @Column(name = "first_name", nullable = false) // Database constraint: Not null
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Column(nullable = false, unique = true) // Email must be unique and not null
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true) // Phone number must be unique and not null
+    @Column(nullable = false, unique = true)
     private String phone;
 
     @Column(nullable = false)
@@ -49,15 +49,12 @@ public class Employee implements UserDetails {
     private LocalDate joiningDate;
 
 
-    // Setter for password
-    // Getter for password
-    private String password; // New password field
+    private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
-    // Getters and Setters
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))

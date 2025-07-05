@@ -34,9 +34,10 @@ public class HomeController {
     @GetMapping()
     public ResponseEntity<ApiResponse> getHomePageData() {
         int totalEmployee = employeeService.getAllEmployees().size();
-        int newEmployee = 0;
+        int newEmployee = employeeService.getNewEmployees().size();
         List<LeaveRequestDto> recentLeaves = leaveRequestService.get10LatestLaves();
         List<LeaveRequestDto> pendingLeaves = leaveRequestService.getPendingLeaveRequests();
+        int employeesOnLeave = leaveRequestService.getActiveLeaves().size();
 
         LocalDate today = LocalDate.now();
         List<Payroll> pendingPayrolls = payrollService.getPayrollsByStatus(PaymentStatus.PENDING, today.getMonthValue(), today.getYear());
@@ -64,6 +65,7 @@ public class HomeController {
                                 .payrollProcessed(paidPayment)
                                 .payrollPending(pendingPayment)
                                 .payrollBlocked(blockedPayment)
+                                .employeesOnLeave(employeesOnLeave)
                                 .build()
                 )
         );

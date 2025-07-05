@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -147,6 +148,28 @@ public class LeaveRequestService {
 
     public List<LeaveRequestDto> getPendingLeaveRequests() {
         List<LeaveRequest> leaves = leaveRequestRepository.findByStatus(LeaveStatus.PENDING);
+        return leaves.stream()
+                .map(leave -> LeaveRequestDto.builder()
+                        .id(leave.getId())
+                        .employeeId(leave.getEmployee().getId())
+                        .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
+                        .leaveType(leave.getLeaveType())
+                        .startDate(leave.getStartDate())
+                        .endDate(leave.getEndDate())
+                        .status(leave.getStatus())
+                        .reason(leave.getReason())
+                        .comments(leave.getComments())
+                        .build())
+                .toList();
+    }
+
+    public List<LeaveRequestDto> getActiveLeaves() {
+        LocalDate today = LocalDate.now();
+        List<LeaveRequest> leaves = leaveRequestRepository.findByStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                LeaveStatus.APPROVED,
+                today,
+                today
+        );
         return leaves.stream()
                 .map(leave -> LeaveRequestDto.builder()
                         .id(leave.getId())
