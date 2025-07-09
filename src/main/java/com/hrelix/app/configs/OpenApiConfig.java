@@ -23,7 +23,7 @@ import java.util.Arrays;
         servers = {
                 @Server(
                         description = "Production Environment",
-                        url = "https://hrelix.blufin.co.in"
+                        url = "https://api-hrelix.blufin.co.in"
                 ),
                 @Server(
                         description = "Local Environment",

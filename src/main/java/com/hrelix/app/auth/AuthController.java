@@ -7,6 +7,7 @@ import com.hrelix.app.utilities.ApiResponse;
 import com.hrelix.app.utilities.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 @CrossOrigin
@@ -34,6 +36,7 @@ public class AuthController {
     )
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody AuthRequest authRequest) throws Exception {
+        log.info("Login Called ====> :)");
         final Employee userDetails = employeeService.findByEmail(authRequest.getEmail());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
