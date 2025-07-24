@@ -47,8 +47,8 @@ public class SecurityConfig {
                         .frameOptions(frameOptions -> frameOptions.disable())
                         .contentSecurityPolicy(csp -> csp.policyDirectives(
                                 "default-src 'self'; " +
-                                        "script-src 'self' 'unsafe-inline'; " +
-                                        "style-src 'self' 'unsafe-inline'; " +
+                                        "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; " +
+                                        "style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; " +
                                         "img-src 'self' data:; " +
                                         "font-src 'self'; " +
                                         "connect-src 'self' https://api-hrelix.blufin.co.in;"
