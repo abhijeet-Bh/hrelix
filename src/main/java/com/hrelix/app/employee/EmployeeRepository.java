@@ -19,4 +19,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
     Optional<Employee> getEmployeeById(UUID id);
 
     List<Employee> findByJoiningDateAfter(LocalDate date);
+
+    List<Employee> findByEmailIgnoreCaseOrFirstNameIgnoreCaseOrLastNameIgnoreCase(String key, String firstName, String lastName);
+
 }

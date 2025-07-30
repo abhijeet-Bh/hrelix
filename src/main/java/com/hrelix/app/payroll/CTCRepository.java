@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface CTCRepository extends JpaRepository<EmployeeCTC, UUID> {
     Optional<EmployeeCTC> getCtcByEmployee(UUID id);
+
+    Optional<EmployeeCTC> findByEmployee(UUID id);
 }

@@ -79,6 +79,7 @@ public class EmployeeService {
                 .id(updated.getId())
                 .firstName(updated.getFirstName())
                 .lastName(updated.getLastName())
+                .avatar(updated.getAvatar())
                 .email(updated.getEmail())
                 .phone(updated.getPhone())
                 .salary(updated.getSalary())
@@ -104,6 +105,7 @@ public class EmployeeService {
                         .salary(principal.getSalary())
                         .joiningDate(principal.getJoiningDate())
                         .roles(principal.getRoles())
+                        .avatar(principal.getAvatar())
                         .build();
             } catch (Exception e) {
                 log.error(e.getMessage());
@@ -117,5 +119,27 @@ public class EmployeeService {
     public List<Employee> getNewEmployees() {
         LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
         return employeeRepository.findByJoiningDateAfter(thirtyDaysAgo);
+    }
+
+    public EmployeeDTO updateEmployeeAvatar(Employee employee) {
+        Employee emp = employeeRepository.save(employee);
+        return EmployeeDTO.builder()
+                .id(emp.getId())
+                .firstName(emp.getFirstName())
+                .lastName(emp.getLastName())
+                .email(emp.getEmail())
+                .phone(emp.getPhone())
+                .salary(emp.getSalary())
+                .joiningDate(emp.getJoiningDate())
+                .roles(emp.getRoles())
+                .avatar(emp.getAvatar())
+                .build();
+    }
+
+    public List<EmployeeDTO> searchEmployeeByEmailOrName(String key) {
+        List<Employee> employees = employeeRepository.findByEmailIgnoreCaseOrFirstNameIgnoreCaseOrLastNameIgnoreCase(key, key, key);
+        return employees.stream()
+                .map(EmployeeMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

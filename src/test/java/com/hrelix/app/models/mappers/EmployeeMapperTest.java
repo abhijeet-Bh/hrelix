@@ -1,7 +1,7 @@
 package com.hrelix.app.models.mappers;
 
-import com.hrelix.app.employee.EmployeeDTO;
 import com.hrelix.app.employee.Employee;
+import com.hrelix.app.employee.EmployeeDTO;
 import com.hrelix.app.employee.EmployeeMapper;
 import com.hrelix.app.employee.Role;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,6 +36,9 @@ class EmployeeMapperTest {
                 "6201240770",
                 5000000.00,
                 LocalDate.now(),
+                "https://hrelix-backend.s3.ap-south-1.amazonaws.com/profiles/default-avatar.png",
+                "Human Resource",
+                "Software Engineer",
                 "testPassword",
                 roles
         );
@@ -52,6 +55,7 @@ class EmployeeMapperTest {
         assertEquals(reqBodyEmployee.getPhone(), newEmployee.getPhone());
         assertEquals(reqBodyEmployee.getSalary(), newEmployee.getSalary());
         assertEquals(reqBodyEmployee.getJoiningDate(), newEmployee.getJoiningDate());
+        assertEquals(reqBodyEmployee.getAvatar(), newEmployee.getAvatar());
         assertEquals(reqBodyEmployee.getPassword(), newEmployee.getPassword());
         assertEquals(reqBodyEmployee.getRoles(), newEmployee.getRoles());
 

@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface DeductionsRepo extends JpaRepository<Deductions, UUID> {
     Optional<Deductions> getDeductionByEmployee(UUID id);
+
+    Optional<Deductions> findByEmployee(UUID id);
 }

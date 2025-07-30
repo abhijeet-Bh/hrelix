@@ -22,6 +22,9 @@ public class EmployeeDTO {
     private String phone;
     private Double salary;
     private LocalDate joiningDate;
+    private String avatar;
+    private String team;
+    private String position;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Password will only be accepted in requests
     private String password;

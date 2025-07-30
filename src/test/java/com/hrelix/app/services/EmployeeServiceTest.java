@@ -1,11 +1,6 @@
 package com.hrelix.app.services;
 
-import com.hrelix.app.employee.EmployeeDTO;
-import com.hrelix.app.employee.Employee;
-import com.hrelix.app.employee.EmployeeMapper;
-import com.hrelix.app.employee.EmployeeService;
-import com.hrelix.app.employee.Role;
-import com.hrelix.app.employee.EmployeeRepository;
+import com.hrelix.app.employee.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -58,6 +53,9 @@ class EmployeeServiceTest {
                 "6201240770",
                 5000000.00,
                 LocalDate.now(),
+                "https://hrelix-backend.s3.ap-south-1.amazonaws.com/profiles/default-avatar.png",
+                "Development",
+                "Software Engineer",
                 "testPassword",
                 roles
         );
@@ -68,9 +66,12 @@ class EmployeeServiceTest {
                 "Bhardwaj",
                 "email@test.com",
                 "6201240770",
+                "https://hrelix-backend.s3.ap-south-1.amazonaws.com/profiles/default-avatar.png",
                 5000000.00,
                 LocalDate.now(),
                 "hashedPassword",
+                "Software Engineer",
+                "Developer",
                 roles
         );
 

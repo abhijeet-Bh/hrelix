@@ -43,13 +43,23 @@ public class Employee implements UserDetails {
     private String phone;
 
     @Column(nullable = false)
+    private String avatar = "https://hrelix-backend.s3.ap-south-1.amazonaws.com/profiles/default-avatar.png";
+
+
+    @Column(nullable = false)
     private Double salary;
 
     @Column(nullable = false)
     private LocalDate joiningDate;
 
-
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private String position = "Employee";
+
+    @Column()
+    private String team;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
