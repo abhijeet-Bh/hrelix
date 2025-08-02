@@ -4,6 +4,7 @@ import com.hrelix.app.utilities.ApiResponse;
 import com.hrelix.app.utilities.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -111,6 +112,22 @@ public class GlobalExceptionHandler {
                         "Bank detail not defined!",
                         errorDetails
                 ));
+    }
+
+    // Handle un-authorized access
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException ex) {
+        Map<String, Object> errorDetails = new HashMap<>();
+        errorDetails.put("message", "You don't have permission to perform this operation");
+        errorDetails.put("timestamp", LocalDateTime.now());
+        errorDetails.put("status", HttpStatus.UNAUTHORIZED.value()); // 401
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ErrorResponse(
+                        "Access Denied",
+                        errorDetails
+                )
+        );
     }
 
     // Handle other RuntimeExceptions

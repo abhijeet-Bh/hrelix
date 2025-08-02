@@ -11,7 +11,9 @@ import com.hrelix.app.utilities.S3Service;
 import com.hrelix.app.utilities.SuccessResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,23 +53,41 @@ public class EmployeeController {
 
     }
 
-    // POST: Upload employee Avatar
     @PostMapping("/{id}/upload-profile")
     public ResponseEntity<ApiResponse> uploadProfile(
             @PathVariable UUID id,
-            @RequestParam("image") MultipartFile image
+            @RequestParam("image") MultipartFile image,
+            @AuthenticationPrincipal Employee currentUser
     ) throws IOException {
-        Employee employee = employeeService.findById(id);
+        Employee employeeToUpdate = employeeService.findById(id);
 
+        // ROLE-based access control
+        boolean isSameUser = currentUser.getId().equals(id);
+        boolean isAdminOrHR = currentUser.getRoles().contains(Role.ADMIN) || currentUser.getRoles().contains(Role.HR);
+
+        if (!(isSameUser || isAdminOrHR)) {
+            throw new AccessDeniedException("You don't have permission to update this profile picture");
+        }
+
+        // Step 1: Delete previous avatar if not default
+        String currentAvatar = employeeToUpdate.getAvatar();
+        String defaultAvatarUrl = "https://hrelix-backend.s3.ap-south-1.amazonaws.com/profiles/default-avatar.png";
+
+        if (currentAvatar != null && !currentAvatar.equals(defaultAvatarUrl)) {
+            s3Service.deleteFileByUrl(currentAvatar);
+        }
+
+        // Step 2: Upload new image
         String folder = "profiles";
         String s3Url = s3Service.uploadFile(image, folder);
 
-        employee.setAvatar(s3Url);
-        EmployeeDTO updatedEmployee = employeeService.updateEmployeeAvatar(employee);
+        // Step 3: Update and save employee
+        employeeToUpdate.setAvatar(s3Url);
+        EmployeeDTO updatedEmployee = employeeService.updateEmployeeAvatar(employeeToUpdate);
 
         return ResponseEntity.ok(
                 new SuccessResponse<>(
-                        "profile picture updated successfully!",
+                        "Profile picture updated successfully!",
                         updatedEmployee
                 ));
     }
@@ -159,7 +179,16 @@ public class EmployeeController {
     @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
     public ResponseEntity<ApiResponse> deleteEmployee(@PathVariable UUID id) {
         Employee employee = employeeService.findById(id);
-        if (employee != null && employeeService.deleteEmployee(employee)) {
+
+        if (employee != null) {
+            String currentAvatar = employee.getAvatar();
+            String defaultAvatarUrl = "https://hrelix-backend.s3.ap-south-1.amazonaws.com/profiles/default-avatar.png";
+
+            if (currentAvatar != null && !currentAvatar.equals(defaultAvatarUrl)) {
+                s3Service.deleteFileByUrl(currentAvatar);
+            }
+            employeeService.deleteEmployee(employee);
+
             return ResponseEntity.ok(
                     new SuccessResponse<>(
                             "Employee Deleted Successfully!",
