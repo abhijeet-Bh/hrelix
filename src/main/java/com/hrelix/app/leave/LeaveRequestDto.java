@@ -19,6 +19,7 @@ public class LeaveRequestDto {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private LocalDate appliedOn;
 
     private LeaveStatus status;
 

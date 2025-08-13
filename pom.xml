@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.hrelix</groupId>
     <artifactId>hrelix</artifactId>
-    <version>2.7.3+1</version>
+    <version>2.7.4+1</version>
     <name>app</name>
     <description>HRelix is a HR-Management Backend System</description>
     <url/>

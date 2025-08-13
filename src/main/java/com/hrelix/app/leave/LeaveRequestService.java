@@ -4,6 +4,10 @@ import com.hrelix.app.employee.Employee;
 import com.hrelix.app.exceptions.LeaveNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,22 +27,26 @@ public class LeaveRequestService {
     @Autowired
     private MailService mailService;
 
-    public List<LeaveRequestDto> getAllLeaveRequests() {
-        List<LeaveRequest> leaves = leaveRequestRepository.findAll();
-        return leaves.stream()
-                .map(leave -> LeaveRequestDto.builder()
-                        .id(leave.getId())
-                        .employeeId(leave.getEmployee().getId())
-                        .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
-                        .leaveType(leave.getLeaveType())
-                        .startDate(leave.getStartDate())
-                        .endDate(leave.getEndDate())
-                        .status(leave.getStatus())
-                        .reason(leave.getReason())
-                        .comments(leave.getComments())
-                        .build())
-                .toList();
+    public Page<LeaveRequestDto> getAllLeaveRequests(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<LeaveRequest> leaves = leaveRequestRepository.findAll(pageable);
+
+        return leaves.map(leave -> LeaveRequestDto.builder()
+                .id(leave.getId())
+                .employeeId(leave.getEmployee().getId())
+                .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
+                .leaveType(leave.getLeaveType())
+                .appliedOn(LocalDate.from(leave.getCreatedAt()))
+                .startDate(leave.getStartDate())
+                .endDate(leave.getEndDate())
+                .status(leave.getStatus())
+                .reason(leave.getReason())
+                .comments(leave.getComments())
+                .build()
+        );
     }
+
 
     public List<LeaveRequestDto> get10LatestLaves() {
         List<LeaveRequest> leaves = leaveRequestRepository.findTop10ByOrderByCreatedAtDesc();
@@ -48,6 +56,7 @@ public class LeaveRequestService {
                         .employeeId(leave.getEmployee().getId())
                         .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
                         .leaveType(leave.getLeaveType())
+                        .appliedOn(LocalDate.from(leave.getCreatedAt()))
                         .startDate(leave.getStartDate())
                         .endDate(leave.getEndDate())
                         .status(leave.getStatus())
@@ -70,6 +79,7 @@ public class LeaveRequestService {
                     .employeeId(leave.getEmployee().getId())
                     .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
                     .leaveType(leave.getLeaveType())
+                    .appliedOn(LocalDate.from(leave.getCreatedAt()))
                     .startDate(leave.getStartDate())
                     .endDate(leave.getEndDate())
                     .status(leave.getStatus())
@@ -97,6 +107,7 @@ public class LeaveRequestService {
                     .employeeId(updatedLeave.getEmployee().getId())
                     .employeeName(updatedLeave.getEmployee().getFirstName() + " " + updatedLeave.getEmployee().getLastName())
                     .leaveType(updatedLeave.getLeaveType())
+                    .appliedOn(LocalDate.from(updatedLeave.getCreatedAt()))
                     .startDate(updatedLeave.getStartDate())
                     .endDate(updatedLeave.getEndDate())
                     .status(updatedLeave.getStatus())
@@ -117,6 +128,7 @@ public class LeaveRequestService {
                         .employeeId(leave.getEmployee().getId())
                         .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
                         .leaveType(leave.getLeaveType())
+                        .appliedOn(LocalDate.from(leave.getCreatedAt()))
                         .startDate(leave.getStartDate())
                         .endDate(leave.getEndDate())
                         .status(leave.getStatus())
@@ -135,6 +147,7 @@ public class LeaveRequestService {
                     .employeeId(leave.getEmployee().getId())
                     .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
                     .leaveType(leave.getLeaveType())
+                    .appliedOn(LocalDate.from(leave.getCreatedAt()))
                     .startDate(leave.getStartDate())
                     .endDate(leave.getEndDate())
                     .status(leave.getStatus())
@@ -154,6 +167,7 @@ public class LeaveRequestService {
                         .employeeId(leave.getEmployee().getId())
                         .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
                         .leaveType(leave.getLeaveType())
+                        .appliedOn(LocalDate.from(leave.getCreatedAt()))
                         .startDate(leave.getStartDate())
                         .endDate(leave.getEndDate())
                         .status(leave.getStatus())
@@ -176,6 +190,7 @@ public class LeaveRequestService {
                         .employeeId(leave.getEmployee().getId())
                         .employeeName(leave.getEmployee().getFirstName() + " " + leave.getEmployee().getLastName())
                         .leaveType(leave.getLeaveType())
+                        .appliedOn(LocalDate.from(leave.getCreatedAt()))
                         .startDate(leave.getStartDate())
                         .endDate(leave.getEndDate())
                         .status(leave.getStatus())

@@ -31,6 +31,7 @@ public class LeaveRequest {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private String testMailAddress;
 
     @Enumerated(EnumType.STRING)
     private LeaveStatus status; // PENDING, APPROVED, REJECTED

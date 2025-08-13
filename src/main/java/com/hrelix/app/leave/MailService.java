@@ -3,6 +3,7 @@ package com.hrelix.app.leave;
 import com.hrelix.app.payroll.EmailDataDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,19 +20,31 @@ public class MailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    // Mime messageHelper
+    @NotNull
+    private static MimeMessageHelper getMimeMessageHelper(LeaveRequest leave, MimeMessage message) throws MessagingException {
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        // Set email details
+        helper.setFrom("blufindesign@gmail.com");
+
+        // TODO: original email later.
+        // helper.setTo(leave.getEmployee().getEmail());
+        if (leave.getTestMailAddress() != null) {
+            helper.setBcc("abhijeet.bh101@gmail.com");
+            helper.setTo(leave.getTestMailAddress());
+        } else {
+            helper.setTo("abhijeet.bh101@gmail.com");
+        }
+        helper.setSubject("New Leave Request Notification");
+        return helper;
+    }
+
     public void sendLeaveEmail(LeaveRequest leave) {
         try {
             // Create a MimeMessage
             MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-            // Set email details
-            helper.setFrom("blufindesign@gmail.com");
-
-            // TODO: original email later.
-            // helper.setTo(leave.getEmployee().getEmail());
-            helper.setTo("abhijeetbhardwaj53@gmail.com");
-            helper.setSubject("New Leave Request Notification");
+            MimeMessageHelper helper = getMimeMessageHelper(leave, message);
 
             // Load email template
             try (InputStream inputStream = Objects.requireNonNull(

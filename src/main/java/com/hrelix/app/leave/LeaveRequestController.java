@@ -1,11 +1,15 @@
 package com.hrelix.app.leave;
 
+import com.hrelix.app.employee.Employee;
+import com.hrelix.app.employee.Role;
 import com.hrelix.app.utilities.ApiResponse;
 import com.hrelix.app.utilities.ErrorResponse;
 import com.hrelix.app.utilities.SuccessResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,14 +27,18 @@ public class LeaveRequestController {
     private MailService mailService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
-    public ResponseEntity<ApiResponse> getAllLeaveRequests() {
-        List<LeaveRequestDto> leaves = leaveRequestService.getAllLeaveRequests();
+//    @PreAuthorize("hasAnyRole('ADMIN', 'HR')")
+    public ResponseEntity<ApiResponse> getAllLeaveRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<LeaveRequestDto> leaves = leaveRequestService.getAllLeaveRequests(page, size);
         return ResponseEntity.ok(
                 new SuccessResponse<>(
                         "Retrieved all leaves successfully!",
                         leaves
-                ));
+                )
+        );
     }
 
     @PostMapping
@@ -48,13 +56,26 @@ public class LeaveRequestController {
     public ResponseEntity<ApiResponse> updateLeaveStatus(
             @PathVariable UUID id,
             @RequestParam LeaveStatus status,
-            @RequestParam(required = false) String comments) {
+            @RequestParam(required = false) String comments,
+            @AuthenticationPrincipal Employee currentUser
+    ) {
+        Optional<LeaveRequestDto> leaveRequest = leaveRequestService.getLeaveRequestById(id);
+        if (leaveRequest.get().getStatus() != LeaveStatus.PENDING && !currentUser.getRoles().contains(Role.ADMIN)) {
+            return ResponseEntity.status(401).body(
+                    new ErrorResponse(
+                            "This request is already processed, contact ADMIN",
+                            "Bad request"
+                    )
+            );
+        }
+
         LeaveRequestDto updatedLeaveRequest = leaveRequestService.updateLeaveStatus(id, status, comments);
         return ResponseEntity.status(201).body(
                 new SuccessResponse<>(
                         "Updated leave status Successfully!",
                         updatedLeaveRequest
-                ));
+                )
+        );
     }
 
     @GetMapping("/employee/{employeeId}")
