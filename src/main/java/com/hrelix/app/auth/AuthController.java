@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,11 @@ public class AuthController {
     )
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody AuthRequest authRequest) throws Exception {
-        log.info("Login Called ====> :)");
+
+        // Logs for logins (for testing)
+        log.info("Login Called with: " + authRequest.getEmail());
+        log.info("TimeStamp: " + LocalDateTime.now());
+
         final Employee userDetails = employeeService.findByEmail(authRequest.getEmail());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())

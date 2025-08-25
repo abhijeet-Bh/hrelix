@@ -22,7 +22,7 @@ public class Payroll {
     @NotNull(message = "Employee Id is Needed to create payroll")
     private UUID employee;
 
-    @Column(name = "payroll_month", nullable = false)
+    @Column(nullable = false)
     private LocalDate payrollMonth;
 
     private double netCTC;
